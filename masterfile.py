@@ -21,8 +21,12 @@ def collect_hours(row, number):
         return None
     if type(row[number]) == str and len(row[number])<1:
         return None
+    elif type(row[number]) == float:
+        return row[number]
     elif type(row[number]) == str and len(row[number])>0:
-        if "." in row[number]:
+        if "=" in row[number]:
+            return None
+        elif "." in row[number]:
             return float(row[number])
         else:
             h = int(row[number])
@@ -112,7 +116,7 @@ def find_data_column(sheet, row):
             columns['reg1'] = i
             columns['reg2'] = (i+1)
 
-        if "OT Hrs Week 1" in v:
+        if "OT Hrs Week 1" in v or "OT Hrs week1" in v or "OT Hrs week 1" in v:
             columns['ot1'] = i
             columns['ot2'] = i+1
 
