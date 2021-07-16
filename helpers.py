@@ -66,6 +66,11 @@ def create_generic_import(data, markup, customer_name=None):
 
         # Sets column C to the value of the customer name or None
         new_sheet.cell(row=sheet_row, column=3).value = customer_name
+
+        # sets payrate to specified if they are a special case employee
+        if e.id == 293355:
+            new_sheet.cell(row=sheet_row, column=4).value = 100
+            new_sheet.cell(row=sheet_row, column=5).value = 116.5
         
         # sets column F to the value of regular hours
         if e.reg:
@@ -76,6 +81,8 @@ def create_generic_import(data, markup, customer_name=None):
             new_sheet.cell(row=sheet_row, column=7).value = e.ot1
         elif e.reg and not e.ot1:
             new_sheet.cell(row=sheet_row, column=7).value = 0
+
+        
         
         # Sets columns J to 1, K to the value of commission, and L to commission times markup
         if e.commission:
