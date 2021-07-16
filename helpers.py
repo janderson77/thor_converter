@@ -68,7 +68,7 @@ def create_generic_import(data, markup, customer_name=None):
         new_sheet.cell(row=sheet_row, column=3).value = customer_name
 
         # sets payrate to specified if they are a special case employee
-        if e.id == 293355:
+        if e.id == 293355 and customer_name == "Papa Pita":
             new_sheet.cell(row=sheet_row, column=4).value = 100
             new_sheet.cell(row=sheet_row, column=5).value = 116.5
         
