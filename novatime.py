@@ -43,43 +43,42 @@ def convertPPNT():
             data.append(tc)
     return data
 
-def create_pp_generic_import(data):
-    wb = Workbook()
-    new_sheet = wb.active
+# def create_pp_generic_import(data):
+#     wb = Workbook()
+#     new_sheet = wb.active
 
-    for i in char_range('A','G'):
-        new_sheet[f'{i}1'].alignment = center_aligned_text
+#     for i in char_range('A','G'):
+#         new_sheet[f'{i}1'].alignment = center_aligned_text
 
-    new_sheet['A1'] = 'Employee Name'
-    new_sheet['B1'] = 'Emp #'
-    new_sheet['C1'] = 'Cust Name'
-    new_sheet['D1'] = 'Pay Rate'
-    new_sheet['E1'] = 'Reg Hrs'
-    new_sheet['F1'] = 'OT Hrs'
-    new_sheet['G1'] = 'DT Hrs'
-    # Sets the starting row to be edited as row 2
-    sheet_row = 2
+#     new_sheet['A1'] = 'Employee Name'
+#     new_sheet['B1'] = 'Emp #'
+#     new_sheet['C1'] = 'Cust Name'
+#     new_sheet['D1'] = 'Pay Rate'
+#     new_sheet['E1'] = 'Reg Hrs'
+#     new_sheet['F1'] = 'OT Hrs'
+#     new_sheet['G1'] = 'DT Hrs'
+#     # Sets the starting row to be edited as row 2
+#     sheet_row = 2
 
-    # iterates over the data list
-    for e in data:
-        # sets column B to the value of employee id
-        new_sheet.cell(row=sheet_row, column=2).value = e.id
+#     # iterates over the data list
+#     for e in data:
+#         # sets column B to the value of employee id
+#         new_sheet.cell(row=sheet_row, column=2).value = e.id
 
-        # Sets column C to the value of Papa Pita Bakery
-        new_sheet.cell(row=sheet_row, column=3).value = "Papa Pita Bakery"
+#         # Sets column C to the value of Papa Pita Bakery
+#         new_sheet.cell(row=sheet_row, column=3).value = "Papa Pita Bakery"
         
-        # sets column E to the value of regular hours
-        new_sheet.cell(row=sheet_row, column=5).value = e.reg
+#         # sets column E to the value of regular hours
+#         new_sheet.cell(row=sheet_row, column=5).value = e.reg
         
-        # sets column F to the value of OT hours
-        new_sheet.cell(row=sheet_row, column=6).value = e.ot1
+#         # sets column F to the value of OT hours
+#         new_sheet.cell(row=sheet_row, column=6).value = e.ot1
         
-        # Increments the sheet_row variable so that the next set of data is put on a new row
-        sheet_row+=1
+#         # Increments the sheet_row variable so that the next set of data is put on a new row
+#         sheet_row+=1
 
-    # Saves as a new file
-    wb.save(filename="Papa Pita Novatime Import.xlsx")
+#     # Saves as a new file
+#     wb.save(filename="Papa Pita Novatime Import.xlsx")
 
 import_data = convertPPNT()
-# create_pp_generic_import(import_data)
 create_generic_import(["Novatime",import_data], 1.165, "Papa Pita")
