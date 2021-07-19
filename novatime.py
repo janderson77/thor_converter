@@ -21,7 +21,7 @@ def convertPPNT():
     # List for the Employee data to be stored
     data = []
     # Iterates over the Novatime export
-    for row in sheet.iter_rows(min_row=1, max_row=319,values_only=True):
+    for row in sheet.iter_rows(min_row=1, max_row=sheet.max_row, values_only=True):
         # If there is already data in the data list
         if len(data) > 0:
             # if the employee id in the last index of the data list is the same as the current one
