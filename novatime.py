@@ -1,6 +1,6 @@
 from openpyxl import load_workbook, Workbook
 from openpyxl.styles import Alignment
-from helpers import char_range, Employee
+from helpers import char_range, Employee, create_generic_import
 
 # imports the Novatime export as well as the timecard import sheet
 wb = load_workbook(filename="TWKPR.xlsx", read_only=True)
@@ -81,4 +81,5 @@ def create_pp_generic_import(data):
     wb.save(filename="Papa Pita Novatime Import.xlsx")
 
 import_data = convertPPNT()
-create_pp_generic_import(import_data)
+# create_pp_generic_import(import_data)
+create_generic_import(["Novatime",import_data], 1.165, "Papa Pita")
