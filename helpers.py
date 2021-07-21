@@ -73,8 +73,9 @@ def create_generic_import(data, markup, customer_name=None):
             new_sheet.cell(row=sheet_row, column=5).value = 116.5
 
         # Sets bill rate to 0.00 if a Papa Pita employee works less than 4 hours
-        if customer_name == "Papa Pita" and e.reg <= 4.00:
-            new_sheet.cell(row=sheet_row, column=5).value = 0.00
+        if customer_name == "Papa Pita" and e.reg != None:
+            if e.reg <= 4.00: 
+                new_sheet.cell(row=sheet_row, column=5).value = 0.00
         
         # sets column F to the value of regular hours
         if e.reg:
