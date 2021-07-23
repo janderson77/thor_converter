@@ -76,6 +76,7 @@ def create_generic_import(data, markup, customer_name=None):
         if customer_name == "Papa Pita" and e.reg != None:
             if e.reg <= 4.00: 
                 new_sheet.cell(row=sheet_row, column=5).value = 0.00
+                new_sheet.cell(row=sheet_row, column=9).value = "reg agree"
         
         # sets column F to the value of regular hours
         if e.reg:
