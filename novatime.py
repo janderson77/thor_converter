@@ -5,7 +5,7 @@ import win32com.client as win32
 import os
 
 # Opens the Novatime export, saves it as xlsx
-fname = (r"C:\Users\James\Documents\Coding\thor_converter\TWKPR.XLS")
+fname = os.path.abspath('TWKPR.XLS')
 excel = win32.gencache.EnsureDispatch('Excel.Application')
 toSave = excel.Workbooks.Open(fname)
 toSave.SaveAs(fname+"X", FileFormat=51)
