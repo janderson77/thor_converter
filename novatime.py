@@ -1,20 +1,32 @@
 from openpyxl import load_workbook, Workbook
 from openpyxl.styles import Alignment
 from helpers import char_range, Employee, create_generic_import
+import win32com.client as win32
+import os
 
-# imports the Novatime export as well as the timecard import sheet
+# Opens the Novatime export, saves it as xlsx
+fname = (r"C:\Users\James\Documents\Coding\thor_converter\TWKPR.XLS")
+excel = win32.gencache.EnsureDispatch('Excel.Application')
+toSave = excel.Workbooks.Open(fname)
+toSave.SaveAs(fname+"X", FileFormat=51)
+toSave.Close()
+excel.Application.Quit()
+
+# Opens the new xlsx file for manipulation
 wb = load_workbook(filename="TWKPR.xlsx", read_only=True)
 sheet = wb.active
 center_aligned_text = Alignment(horizontal="center")
 
+
 def newTimecard(id, type, hours):
-        """Creates a new Employee dataclass instance and stores the employee id and either the regular or overtime hours associated with it in the first cell found with that employee id"""
-        emp = Employee(id=id)
-        if type == 'reg':
-            emp.reg = hours
-        if type == 'ot1':
-            emp.ot1 = hours
-        return emp
+    """Creates a new Employee dataclass instance and stores the employee id and either the regular or overtime hours associated with it in the first cell found with that employee id"""
+    emp = Employee(id=id)
+    if type == 'reg':
+        emp.reg = hours
+    if type == 'ot1':
+        emp.ot1 = hours
+    return emp
+
 
 def convertPPNT():
     """Iterates over a Novatime export file, converting the data into an Employee dataclass."""
@@ -43,42 +55,10 @@ def convertPPNT():
             data.append(tc)
     return data
 
-# def create_pp_generic_import(data):
-#     wb = Workbook()
-#     new_sheet = wb.active
-
-#     for i in char_range('A','G'):
-#         new_sheet[f'{i}1'].alignment = center_aligned_text
-
-#     new_sheet['A1'] = 'Employee Name'
-#     new_sheet['B1'] = 'Emp #'
-#     new_sheet['C1'] = 'Cust Name'
-#     new_sheet['D1'] = 'Pay Rate'
-#     new_sheet['E1'] = 'Reg Hrs'
-#     new_sheet['F1'] = 'OT Hrs'
-#     new_sheet['G1'] = 'DT Hrs'
-#     # Sets the starting row to be edited as row 2
-#     sheet_row = 2
-
-#     # iterates over the data list
-#     for e in data:
-#         # sets column B to the value of employee id
-#         new_sheet.cell(row=sheet_row, column=2).value = e.id
-
-#         # Sets column C to the value of Papa Pita Bakery
-#         new_sheet.cell(row=sheet_row, column=3).value = "Papa Pita Bakery"
-        
-#         # sets column E to the value of regular hours
-#         new_sheet.cell(row=sheet_row, column=5).value = e.reg
-        
-#         # sets column F to the value of OT hours
-#         new_sheet.cell(row=sheet_row, column=6).value = e.ot1
-        
-#         # Increments the sheet_row variable so that the next set of data is put on a new row
-#         sheet_row+=1
-
-#     # Saves as a new file
-#     wb.save(filename="Papa Pita Novatime Import.xlsx")
 
 import_data = convertPPNT()
-create_generic_import(["Novatime",import_data], 1.165, "Papa Pita")
+create_generic_import(["Novatime", import_data], 1.165, "Papa Pita")
+# Closes workbook
+wb.close()
+# Deletes xlsx file
+os.remove(fname+"X")
