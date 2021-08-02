@@ -4,14 +4,16 @@ from openpyxl.styles import Alignment
 
 center_aligned_text = Alignment(horizontal="center")
 
+
 @dataclass
 class Employee:
     id: int
     reg: float = 0
     ot1: float = 0
     salary: float = 0
-    commission: float= 0
+    commission: float = 0
     bonus: float = 0
+
 
 @dataclass
 class Columns:
@@ -21,10 +23,12 @@ class Columns:
     bonus: int = 0,
     commission: int = 0
 
-def char_range(c1,c2):
+
+def char_range(c1, c2):
     """Created the ability to iterate over a range of characters for easier tweaking of cells in a row"""
     for c in range(ord(c1), ord(c2)+1):
         yield chr(c)
+
 
 def create_generic_import(data, markup, customer_name=None):
     """
@@ -36,7 +40,7 @@ def create_generic_import(data, markup, customer_name=None):
     wb = Workbook()
     new_sheet = wb.active
 
-    for i in char_range('A','G'):
+    for i in char_range('A', 'G'):
         new_sheet[f'{i}1'].alignment = center_aligned_text
 
     new_sheet['A1'] = 'Employee Name'
@@ -68,42 +72,42 @@ def create_generic_import(data, markup, customer_name=None):
         new_sheet.cell(row=sheet_row, column=3).value = customer_name
 
         # sets payrate to specified if they are a special case employee
-        if e.id == 293355 and customer_name == "Papa Pita":
-            new_sheet.cell(row=sheet_row, column=4).value = 100
-            new_sheet.cell(row=sheet_row, column=5).value = 116.5
+        if customer_name == "Papa Pita":
+            if e.id == 293355:
+                new_sheet.cell(row=sheet_row, column=4).value = 100
+                new_sheet.cell(row=sheet_row, column=5).value = 116.5
 
         # Sets bill rate to 0.00 if a Papa Pita employee works less than 4 hours
         if customer_name == "Papa Pita" and e.reg != None:
-            if e.reg <= 4.00: 
+            if e.reg <= 4.00:
                 new_sheet.cell(row=sheet_row, column=5).value = 0.00
                 new_sheet.cell(row=sheet_row, column=9).value = "reg agree"
-        
+
         # sets column F to the value of regular hours
         if e.reg:
             new_sheet.cell(row=sheet_row, column=6).value = e.reg
-        
+
         # sets column G to the value of OT hours
         if e.ot1:
             new_sheet.cell(row=sheet_row, column=7).value = e.ot1
         elif e.reg and not e.ot1:
             new_sheet.cell(row=sheet_row, column=7).value = 0
 
-        
-        
         # Sets columns J to 1, K to the value of commission, and L to commission times markup
         if e.commission:
             new_sheet.cell(row=sheet_row, column=10).value = 1
             new_sheet.cell(row=sheet_row, column=11).value = e.commission
-            new_sheet.cell(row=sheet_row, column=12).value = (e.commission * markup)
+            new_sheet.cell(row=sheet_row, column=12).value = (
+                e.commission * markup)
 
         # Sets columns M to the value of salary, and N to salary times markup
         if e.salary:
             new_sheet.cell(row=sheet_row, column=13).value = e.salary
-            new_sheet.cell(row=sheet_row, column=14).value = (e.salary * markup)
+            new_sheet.cell(row=sheet_row, column=14).value = (
+                e.salary * markup)
 
-        
         # Increments the sheet_row variable so that the next set of data is put on a new row
-        sheet_row+=1
+        sheet_row += 1
 
         # Creates a new row for a bonus timecard, sets appropriate values and increments sheet_row again.
         if e.bonus:
@@ -113,7 +117,7 @@ def create_generic_import(data, markup, customer_name=None):
             new_sheet.cell(row=sheet_row, column=10).value = 1
             new_sheet.cell(row=sheet_row, column=11).value = e.bonus
             new_sheet.cell(row=sheet_row, column=12).value = (e.bonus * markup)
-            sheet_row+=1
+            sheet_row += 1
 
     # Saves as a new file
     if customer_name == "Papa Pita" or "Papa Pita Bakery":
