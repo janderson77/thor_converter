@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from openpyxl import Workbook
 from openpyxl.styles import Alignment
 
-center_aligned_text = Alignment(horizontal="center")
+center_aligned_text = Alignment(horizontal='center')
 
 
 @dataclass
@@ -25,18 +25,18 @@ class Columns:
 
 
 def char_range(c1, c2):
-    """Created the ability to iterate over a range of characters for easier tweaking of cells in a row"""
+    '''Created the ability to iterate over a range of characters for easier tweaking of cells in a row'''
     for c in range(ord(c1), ord(c2)+1):
         yield chr(c)
 
 
 def create_generic_import(data, markup, customer_name=None):
-    """
+    '''
     Creates a generic timecard import with the provided data.
     Data must be in a 2d array, with index 0 of the main array being the sheet name, and index 1 the employee timecard data array.
-    Argument "customer_name" is optional.
+    Argument 'customer_name' is optional.
     Markup is requird. Must be a float. Example: 1.165
-    """
+    '''
     wb = Workbook()
     new_sheet = wb.active
 
@@ -62,32 +62,32 @@ def create_generic_import(data, markup, customer_name=None):
 
     # iterates over the data list
     for e in data[1]:
-        # Sets column I to the value of "Reg"
-        new_sheet.cell(row=sheet_row, column=9).value = "Reg"
+        # Sets column I to the value of 'Reg'
+        new_sheet.cell(row=sheet_row, column=9).value = 'Reg'
 
-        # sets column B to the value of employee id
+        # Sets column B to the value of employee id
         new_sheet.cell(row=sheet_row, column=2).value = e.id
 
         # Sets column C to the value of the customer name or None
         new_sheet.cell(row=sheet_row, column=3).value = customer_name
 
-        # sets payrate to specified if they are a special case employee
-        if customer_name == "Papa Pita":
+        # Sets payrate to specified if they are a special case employee
+        if customer_name == 'Papa Pita':
             if e.id == 293355:
                 new_sheet.cell(row=sheet_row, column=4).value = 100
                 new_sheet.cell(row=sheet_row, column=5).value = 116.5
 
         # Sets bill rate to 0.00 if a Papa Pita employee works less than 4 hours
-        if customer_name == "Papa Pita" and e.reg != None:
+        if customer_name == 'Papa Pita' and e.reg != None:
             if e.reg <= 4.00:
                 new_sheet.cell(row=sheet_row, column=5).value = 0.00
-                new_sheet.cell(row=sheet_row, column=9).value = "reg agree"
+                new_sheet.cell(row=sheet_row, column=9).value = 'reg agree'
 
-        # sets column F to the value of regular hours
+        # Sets column F to the value of regular hours
         if e.reg:
             new_sheet.cell(row=sheet_row, column=6).value = e.reg
 
-        # sets column G to the value of OT hours
+        # Sets column G to the value of OT hours
         if e.ot1:
             new_sheet.cell(row=sheet_row, column=7).value = e.ot1
         elif e.reg and not e.ot1:
@@ -109,18 +109,18 @@ def create_generic_import(data, markup, customer_name=None):
         # Increments the sheet_row variable so that the next set of data is put on a new row
         sheet_row += 1
 
-        # Creates a new row for a bonus timecard, sets appropriate values and increments sheet_row again.
+        # Creates a new row for a bonus timecard, Sets appropriate values and increments sheet_row again.
         if e.bonus:
             new_sheet.cell(row=sheet_row, column=2).value = e.id
             new_sheet.cell(row=sheet_row, column=3).value = customer_name
-            new_sheet.cell(row=sheet_row, column=9).value = "Bonus"
+            new_sheet.cell(row=sheet_row, column=9).value = 'Bonus'
             new_sheet.cell(row=sheet_row, column=10).value = 1
             new_sheet.cell(row=sheet_row, column=11).value = e.bonus
             new_sheet.cell(row=sheet_row, column=12).value = (e.bonus * markup)
             sheet_row += 1
 
     # Saves as a new file
-    if customer_name == "Papa Pita" or "Papa Pita Bakery":
-        wb.save(filename=f"{customer_name} {data[0]} Import File.xlsx")
+    if customer_name == 'Papa Pita' or 'Papa Pita Bakery':
+        wb.save(filename=f'{customer_name} {data[0]} Import File.xlsx')
     else:
-        wb.save(filename=f"{customer_name} Import File.xlsx")
+        wb.save(filename=f'{customer_name} Import File.xlsx')
