@@ -71,15 +71,12 @@ def create_generic_import(data, markup, customer_name=None):
         # Sets column C to the value of the customer name or None
         new_sheet.cell(row=sheet_row, column=3).value = customer_name
 
-        # Sets payrate to specified if they are a special case employee
+        
         if customer_name == 'Papa Pita':
-            if e.id == 293355:
+            if e.id == 293355: # Sets payrate to specified if they are a special case employee
                 new_sheet.cell(row=sheet_row, column=4).value = 100
                 new_sheet.cell(row=sheet_row, column=5).value = 116.5
-
-        # Sets bill rate to 0.00 if a Papa Pita employee works less than 4 hours
-        if customer_name == 'Papa Pita' and e.reg != None:
-            if e.reg <= 4.00:
+            elif e.reg != None and e.reg <= 4.00: # Sets bill rate to 0.00 if a Papa Pita employee works less than 4 hours
                 new_sheet.cell(row=sheet_row, column=5).value = 0.00
                 new_sheet.cell(row=sheet_row, column=9).value = 'reg agree'
 
