@@ -13,6 +13,8 @@ class Employee:
     salary: float = 0
     commission: float = 0
     bonus: float = 0
+    expenses: float = 0
+    adjustment: float = 0
 
 
 @dataclass
@@ -21,7 +23,8 @@ class Columns:
     ot1: int = 0,
     salary: int = 0,
     bonus: int = 0,
-    commission: int = 0
+    commission: int = 0,
+    expenses: int = 0
 
 
 def char_range(c1, c2):
@@ -29,6 +32,46 @@ def char_range(c1, c2):
     for c in range(ord(c1), ord(c2)+1):
         yield chr(c)
 
+def create_adjustment_import(data, adjust_id, customer_name=None):
+    '''
+    Creates an adjustment import file with the provided data.
+    Data must be in a 2d array, with index 0 of the main array being the sheet name, and index 1 the employee timecard data array.
+    Argument 'customer_name' is optional.
+    '''
+    wb = Workbook()
+    new_sheet = wb.active
+
+    for i in char_range('A', 'E'):
+        new_sheet[f'{i}1'].alignment = center_aligned_text
+
+    new_sheet['A1'] = 'Customer Name'
+    new_sheet['B1'] = 'Adjustment ID'
+    new_sheet['C1'] = 'Employee ID'
+    new_sheet['D1'] = 'Adjustment Pay'
+    new_sheet['E1'] = 'Adjustment Bill'
+
+    # Sets the starting row to be edited as row 2
+    sheet_row = 2
+
+    # iterates over the data list
+    for e in data[1]:
+        # Sets column A to the value of the customer name or leaves blank
+        new_sheet.cell(row=sheet_row, column=1).value = customer_name
+
+        # Sets column B to teh value of the adjustment ID
+        new_sheet.cell(row=sheet_row, column=2).value = adjust_id
+
+        # Sets column C to the value of employee id
+        new_sheet.cell(row=sheet_row, column=3).value = e.id
+
+        # Sets column D and E to the value of the adjustment
+        new_sheet.cell(row=sheet_row, column=4).value = e.adjustment
+        new_sheet.cell(row=sheet_row, column=5).value = e.adjustment
+
+        sheet_row += 1
+
+    # Saves as a new file
+    wb.save(filename=f'{customer_name} Adjustment Import File.xlsx')
 
 def create_generic_import(data, markup, customer_name=None):
     '''
@@ -57,6 +100,7 @@ def create_generic_import(data, markup, customer_name=None):
     new_sheet['L1'] = 'Unit Bill'
     new_sheet['M1'] = 'Salary Pay'
     new_sheet['N1'] = 'Salary Bill'
+
     # Sets the starting row to be edited as row 2
     sheet_row = 2
 
@@ -93,8 +137,15 @@ def create_generic_import(data, markup, customer_name=None):
         # Sets columns J to 1, K to the value of commission, and L to commission times markup
         if e.commission:
             new_sheet.cell(row=sheet_row, column=10).value = 1
-            new_sheet.cell(row=sheet_row, column=11).value = e.commission
-            new_sheet.cell(row=sheet_row, column=12).value = (
+            # If there are expenses, which is usually just a Papa Pita thing, they get added to the unit pay and bill
+            if e.expenses > 0:
+                expenses_plus_commission = e.expenses + e.commission
+                new_sheet.cell(row=sheet_row, column=11).value = expenses_plus_commission
+                new_sheet.cell(row=sheet_row, column=12).value = (
+                expenses_plus_commission * markup)
+            else:
+                new_sheet.cell(row=sheet_row, column=11).value = e.commission
+                new_sheet.cell(row=sheet_row, column=12).value = (
                 e.commission * markup)
 
         # Sets columns M to the value of salary, and N to salary times markup

@@ -1,11 +1,9 @@
 from openpyxl import load_workbook
-from openpyxl.styles import Alignment
-from helpers import Employee, create_generic_import
+from helpers import Employee, create_adjustment_import, create_generic_import
 
 # imports the Novatime export as well as the timecard import sheet
 wb = load_workbook(filename="masterfile.xlsx", read_only=True)
 sheet = wb.active
-center_aligned_text = Alignment(horizontal="center")
 
 def collect_sheet_names():
     """
@@ -36,7 +34,7 @@ def collect_hours(row, number):
     else:
         return row[number]
 
-def collect_employee_data(sheet, columns):
+def collect_employee_data(sheet, columns, s_name="None"):
     """Iterates over the sheet data, creating a new Employee class instance, filling it with data and appending it onto the data list"""
     data = []
     for row in sheet.iter_rows(min_row=sheet.min_row, max_row=sheet.max_row, values_only=True):
@@ -51,6 +49,7 @@ def collect_employee_data(sheet, columns):
             salary = collect_hours(row, columns['salary'])
             bonus = collect_hours(row, columns['bonus'])
             commission = collect_hours(row, columns['commission'])
+            expenses = collect_hours(row, columns['expenses'])
 
             # Adds regular hours to time card, or sets the value to None
             if reg1 != None and reg2 != None:
@@ -74,12 +73,19 @@ def collect_employee_data(sheet, columns):
             else:
                 tc.ot1 = None
 
+            # Adds salary, bonus, commision and expense data, or leaves values as 0 or None
             if salary != None:
                 tc.salary = round(salary,2)
             if bonus != None:
                 tc.bonus = round(bonus,2)
             if commission != None:
                 tc.commission = round(commission,2)
+            if expenses != None:
+                if s_name == "DSD Managers":
+                    tc.expenses = round(expenses,2) - 18
+                    tc.adjustment = 18
+                else:
+                    tc.expenses = round(expenses,2)
 
             data.append(tc)
     return data   
@@ -102,7 +108,8 @@ def find_data_column(sheet, row):
         "ot2": 7,
         "salary": None,
         "bonus": None,
-        "commission": None
+        "commission": None,
+        "expenses": 23
 
     }
 
@@ -111,7 +118,7 @@ def find_data_column(sheet, row):
     for row in sheet.iter_rows(min_row=row, max_row=row, values_only=True):
         data_row = row
 
-    for i,v in enumerate(data_row[:22]):
+    for i,v in enumerate(data_row[:23]):
         if v == None:
             continue
         if "Reg Hrs 1 Week" in v:
@@ -128,26 +135,34 @@ def find_data_column(sheet, row):
             columns['bonus'] = i
         if "Commission Pay" in v:
             columns['commission'] = i
+        if "Expenses-" in v or "Expenses -" in v:
+            columns['expenses'] = i
 
     return columns
 
 def convert_masterfile():
+    """
+    Converts all collected employee data from the Masterfile into importable excel files. DSD Managers is treated uniquely as they have cell phone adjustments.
+    """
     sheets = collect_sheet_names()
     data = []
+    special_data = []
 
     for s in sheets:
+        row = find_data_row(wb[s])
+        columns = find_data_column(wb[s], row)
         if s == "DSD Managers":
-            continue
+            special_data.append([s,collect_employee_data(wb[s], columns, s)])
         else:
-            row = find_data_row(wb[s])
-            columns = find_data_column(wb[s], row)
-            data.append([s,collect_employee_data(wb[s], columns)])
+            data.append([s,collect_employee_data(wb[s], columns, s)])
 
     for d in data:
         create_generic_import(d,1.165,"Papa Pita")
 
-    # print(data)
+    if len(special_data) > 0:
+        for d in special_data:
+            create_generic_import(d,1.165,"Papa Pita")
+            create_adjustment_import(d,48,"Papa Pita")
+
     
-
-
 convert_masterfile()
