@@ -15,6 +15,7 @@ def collect_sheet_names():
     
 def collect_hours(row, number):
     """Collects hours data from the appropriate cells"""
+    # Checks if there is data in the cell. If there is data, checks if it is already a float or not. If not, converts to float before returning.
     if type(row[number]) == None:
         return None
     if type(row[number]) == str and len(row[number])<1:
