@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from openpyxl import Workbook
 from openpyxl.styles import Alignment
+from tempfile import NamedTemporaryFile
 
 center_aligned_text = Alignment(horizontal='center')
 
@@ -31,6 +32,7 @@ def char_range(c1, c2):
     '''Created the ability to iterate over a range of characters for easier tweaking of cells in a row'''
     for c in range(ord(c1), ord(c2)+1):
         yield chr(c)
+
 
 def create_adjustment_import(data, adjust_id, customer_name=None):
     '''
@@ -71,7 +73,8 @@ def create_adjustment_import(data, adjust_id, customer_name=None):
         sheet_row += 1
 
     # Saves as a new file
-    wb.save(filename=f'{customer_name} Adjustment Import File.xlsx')
+    return wb.save(filename=f'uploads/{customer_name} Adjustment Import File.xlsx')
+
 
 def create_generic_import(data, markup, customer_name=None):
     '''
@@ -115,12 +118,11 @@ def create_generic_import(data, markup, customer_name=None):
         # Sets column C to the value of the customer name or None
         new_sheet.cell(row=sheet_row, column=3).value = customer_name
 
-        
         if customer_name == 'Papa Pita':
-            if e.id == 293355: # Sets payrate to specified if they are a special case employee
+            if e.id == 293355:  # Sets payrate to specified if they are a special case employee
                 new_sheet.cell(row=sheet_row, column=4).value = 100
                 new_sheet.cell(row=sheet_row, column=5).value = 116.5
-            elif e.reg != None and e.reg <= 4.00: # Sets bill rate to 0.00 if a Papa Pita employee works less than 4 hours
+            elif e.reg != None and e.reg <= 4.00:  # Sets bill rate to 0.00 if a Papa Pita employee works less than 4 hours
                 new_sheet.cell(row=sheet_row, column=5).value = 0.00
                 new_sheet.cell(row=sheet_row, column=9).value = 'reg agree'
 
@@ -140,13 +142,14 @@ def create_generic_import(data, markup, customer_name=None):
             # If there are expenses, which is usually just a Papa Pita thing, they get added to the unit pay and bill
             if e.expenses > 0:
                 expenses_plus_commission = e.expenses + e.commission
-                new_sheet.cell(row=sheet_row, column=11).value = expenses_plus_commission
+                new_sheet.cell(
+                    row=sheet_row, column=11).value = expenses_plus_commission
                 new_sheet.cell(row=sheet_row, column=12).value = (
-                expenses_plus_commission * markup)
+                    expenses_plus_commission * markup)
             else:
                 new_sheet.cell(row=sheet_row, column=11).value = e.commission
                 new_sheet.cell(row=sheet_row, column=12).value = (
-                e.commission * markup)
+                    e.commission * markup)
 
         # Sets columns M to the value of salary, and N to salary times markup
         if e.salary:
@@ -169,6 +172,6 @@ def create_generic_import(data, markup, customer_name=None):
 
     # Saves as a new file
     if customer_name == 'Papa Pita' or 'Papa Pita Bakery':
-        wb.save(filename=f'{customer_name} {data[0]} Import File.xlsx')
+        wb.save(filename=f'uploads/{customer_name} {data[0]} Import File.xlsx')
     else:
-        wb.save(filename=f'{customer_name} Import File.xlsx')
+        wb.save(filename=f'uploads/{customer_name} Import File.xlsx')

@@ -1,10 +1,13 @@
 import os
-from flask import Flask, request, flash, redirect
+from os.path import basename
+from flask import Flask, request, flash, redirect, abort, send_from_directory
 from flask.templating import render_template
 from flask_debugtoolbar import DebugToolbarExtension
 from forms import FileForm
 import json
 from masterfile_api import convert_masterfile
+from pathlib import Path, PurePath
+from zipfile import ZipFile
 
 
 app = Flask(__name__)
@@ -17,10 +20,24 @@ app.config['SECRET_KEY'] = SECRET_KEY
 
 ALLOWED_EXTENSIONS = {'xls', 'xlsx'}
 
+cwd = Path.cwd()
+uploads = PurePath(cwd, 'uploads')
+app.config['UPLOADS_FOLDER'] = uploads
+
 
 def allowed_file(filename):
     return '.' in filename and \
         filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+def zipFilesInDir(dirName, zipFileName, filter):
+    with ZipFile('uploads/Converted.zip', 'w') as zipObj:
+        for folderName, subfolders, filenames in os.walk(dirName):
+            for filename in filenames:
+                if filter(filename):
+                    filePath = os.path.join(folderName, filename)
+                    zipObj.write(filePath, basename(filePath))
+                    os.remove(filePath)
 
 
 @app.route('/', methods=["GET", "POST"])
@@ -34,10 +51,16 @@ def show_home_page():
     form.client.choices = d
 
     if form.validate_on_submit():
+        if 'Converted.zip' in os.listdir(uploads):
+            os.remove(f'{uploads}/Converted.zip')
         f = request.files.getlist(form.convertFile.name)
         for i in f:
             if 'masterfile' in i.filename:
                 convert_masterfile(i)
-        print(f)
-        return redirect('/')
+        zipFilesInDir('uploads', 'downloads', lambda name: 'xlsx' in name)
+        try:
+            return send_from_directory(app.config['UPLOADS_FOLDER'], 'Converted.zip')
+        except:
+            abort(404)
+
     return render_template("home.html", form=form)
