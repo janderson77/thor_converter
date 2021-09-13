@@ -12,5 +12,26 @@
         </div>
     </div>
 </header>
+<div class="container px-4 px-lg=5 d-flex h-100 align-items-center justify-content-center">
+    <div class="d-flex justify-content-center">
+        <div class="text-center">
+            <form method="POST" id="file-form" enctype="multipart/form-data">
+                {{ form.hidden_tag() }}
+
+                {% for field in form if field.widget.input_type != 'hidden' %}
+                {{ field.label(class="upload=label") }}
+                {{ field(placeholder=field.description) }}
+
+                {% for error in field.errors %}
+                    <span class="text-danger">{{ error }}</span><br>
+                {% endfor %}
+                {% endfor %}
+                <div>
+                    <button class="item-btn">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 {% endblock %}
