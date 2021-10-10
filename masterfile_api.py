@@ -174,4 +174,3 @@ def convert_masterfile(input):
         for d in special_data:
             create_generic_import(d, 1.165, "Papa Pita")
             create_adjustment_import(d, 48, "Papa Pita")
-    print(files)

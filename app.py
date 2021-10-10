@@ -3,9 +3,11 @@ from os.path import basename
 from flask import Flask, request, flash, redirect, abort, send_from_directory
 from flask.templating import render_template
 from flask_debugtoolbar import DebugToolbarExtension
+from werkzeug.utils import secure_filename
 from forms import FileForm
 import json
 from masterfile_api import convert_masterfile
+from novatime_api import convertNT
 from pathlib import Path, PurePath
 from zipfile import ZipFile
 
@@ -54,9 +56,22 @@ def show_home_page():
         if 'Converted.zip' in os.listdir(uploads):
             os.remove(f'{uploads}/Converted.zip')
         f = request.files.getlist(form.convertFile.name)
-        for i in f:
-            if 'masterfile' in i.filename:
-                convert_masterfile(i)
+        if form.client.data == 'Papa Pita Bakery':
+            for i in f:
+                if 'masterfile' in i.filename.lower():
+                    convert_masterfile(i)
+                if 'twkpr' in i.filename.lower():
+                    if 'TWKPR.XLS' in os.listdir(uploads):
+                        os.remove(f'{uploads}/TWKPR.XLS')
+                    if 'TWKPR.XLSX' in os.listdir(uploads):
+                        os.remove(f'{uploads}/TWKPR.XLSX')
+                    filename = secure_filename(i.filename)
+                    i.save(os.path.join(uploads, filename))
+                    convertNT(form.client.data)
+        else:
+            flash("Not Yet Supported", 'danger')
+            return render_template("home.html", form=form)
+
         zipFilesInDir('uploads', 'downloads', lambda name: 'xlsx' in name)
         try:
             return send_from_directory(app.config['UPLOADS_FOLDER'], 'Converted.zip')
