@@ -7,7 +7,7 @@
             "ot_makrup" : "1.165",
             "dt_markup" : "1.165",
             "bonus_markup" : "1.165",
-            "source": "Novatime"
+            "sources": ["Novatime", "masterfile"]
         },
         {
             "id" : "02",
@@ -16,7 +16,7 @@
             "ot_makrup" : "1.30",
             "dt_markup" : "1.30",
             "bonus_markup" : "1.30",
-            "source": "Novatime"
+            "sources": ["Novatime"]
         }
     ]
 }

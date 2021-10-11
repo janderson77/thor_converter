@@ -68,6 +68,8 @@ def show_home_page():
                     filename = secure_filename(i.filename)
                     i.save(os.path.join(uploads, filename))
                     convertNT(form.client.data)
+                    os.remove(f'{uploads}/TWKPR.XLS')
+                    os.remove(f'{uploads}/TWKPR.XLSX')
         else:
             flash("Not Yet Supported", 'danger')
             return render_template("home.html", form=form)

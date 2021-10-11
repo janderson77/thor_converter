@@ -27,7 +27,8 @@ def convertNT(client_name):
     excel.Application.Quit()
 
     # # Opens the new xlsx file for manipulation
-    wb = load_workbook(filename="TWKPR.xlsx", read_only=True)
+    # ***********BROKEN HERE
+    wb = load_workbook(os.path.abspath('uploads/TWKPR.XLSX'), read_only=True)
     sheet = wb.active
     center_aligned_text = Alignment(horizontal="center")
 
