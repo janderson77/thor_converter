@@ -19,9 +19,13 @@ ALLOWED_EXTENSIONS = {'xls', 'xlsx'}
 
 cwd = Path.cwd()
 path = PurePath(cwd, 'uploads')
-uploads = Path(path)
+tmp_upload = '/app/tmp/'
+# uploads = Path(path)
 
-app.config['UPLOADS_FOLDER'] = uploads
+# app.config['UPLOADS_FOLDER'] = uploads
+app.config['UPLOADS_FOLDER_HEROKU'] = tmp_upload
+
+uploads = app.config['UPLOADS_FOLDER_HEROKU']
 
 
 def allowed_file(filename):
@@ -84,7 +88,7 @@ def show_home_page():
 
         zipFilesInDir('uploads', 'downloads', lambda name: 'xlsx' in name)
         try:
-            return send_from_directory(app.config['UPLOADS_FOLDER'], 'Converted.zip')
+            return send_from_directory(app.config['UPLOADS_FOLDER_HEROKU'], 'Converted.zip')
         except:
             abort(404)
 
