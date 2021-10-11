@@ -54,34 +54,34 @@ def show_home_page():
     form.client.choices = d
 
     if form.validate_on_submit():
-        if 'Converted.zip' in os.listdir(uploads):
-            os.remove(f'{uploads}/Converted.zip')
+        if 'Converted.zip' in os.listdir(tmp_upload):
+            os.remove(f'{tmp_upload}/Converted.zip')
         f = request.files.getlist(form.convertFile.name)
         if form.client.data == 'Papa Pita Bakery':
-            if 'TWKPR.XLS' in os.listdir(uploads):
-                os.remove(f'{uploads}/TWKPR.XLS')
-            if 'TWKPR.XLSX' in os.listdir(uploads):
-                os.remove(f'{uploads}/TWKPR.XLSX')
+            if 'TWKPR.XLS' in os.listdir(tmp_upload):
+                os.remove(f'{tmp_upload}/TWKPR.XLS')
+            if 'TWKPR.XLSX' in os.listdir(tmp_upload):
+                os.remove(f'{tmp_upload}/TWKPR.XLSX')
             for i in f:
                 if 'masterfile' in i.filename.lower():
                     convert_masterfile(i)
                 if 'twkpr' in i.filename.lower():
                     filename = secure_filename(i.filename)
-                    i.save(os.path.join(uploads, filename))
+                    i.save(os.path.join(tmp_upload, filename))
                     convertNT(form.client.data)
-                    os.remove(f'{uploads}/TWKPR.XLS')
-                    os.remove(f'{uploads}/TWKPR.XLSX')
+                    os.remove(f'{tmp_upload}/TWKPR.XLS')
+                    os.remove(f'{tmp_upload}/TWKPR.XLSX')
         elif form.client.data == 'Novatime':
-            if 'TWKPR.XLS' in os.listdir(uploads):
-                os.remove(f'{uploads}/TWKPR.XLS')
-            if 'TWKPR.XLSX' in os.listdir(uploads):
-                os.remove(f'{uploads}/TWKPR.XLSX')
+            if 'TWKPR.XLS' in os.listdir(tmp_upload):
+                os.remove(f'{tmp_upload}/TWKPR.XLS')
+            if 'TWKPR.XLSX' in os.listdir(tmp_upload):
+                os.remove(f'{tmp_upload}/TWKPR.XLSX')
             for i in f:
                 filename = secure_filename(i.filename)
-                i.save(os.path.join(uploads, filename))
+                i.save(os.path.join(tmp_upload, filename))
                 convertNT()
-                os.remove(f'{uploads}/TWKPR.XLS')
-                os.remove(f'{uploads}/TWKPR.XLSX')
+                os.remove(f'{tmp_upload}/TWKPR.XLS')
+                os.remove(f'{tmp_upload}/TWKPR.XLSX')
         else:
             flash("Not Yet Supported", 'danger')
             return render_template("home.html", form=form)
