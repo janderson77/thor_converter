@@ -15,7 +15,7 @@ def newTimecard(id, type, hours):
     return emp
 
 
-def convertNT(client_name):
+def convertNT(client_name=None):
     """Iterates over a Novatime export file, converting the data into an Employee dataclass."""
 
     # Opens the Novatime export, saves it as xlsx

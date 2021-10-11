@@ -12,7 +12,7 @@
                             {{ form.hidden_tag() }}
             
                             {% for field in form if field.widget.input_type != 'hidden' %}
-                            {{ field.label(class="upload=label") }}
+                            {{ field.label(class="upload=label text-white-50 mx-auto mt-2 mb-2") }}
                             {{ field(placeholder=field.description) }}
             
                             {% for error in field.errors %}

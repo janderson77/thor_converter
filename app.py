@@ -57,19 +57,30 @@ def show_home_page():
             os.remove(f'{uploads}/Converted.zip')
         f = request.files.getlist(form.convertFile.name)
         if form.client.data == 'Papa Pita Bakery':
+            if 'TWKPR.XLS' in os.listdir(uploads):
+                os.remove(f'{uploads}/TWKPR.XLS')
+            if 'TWKPR.XLSX' in os.listdir(uploads):
+                os.remove(f'{uploads}/TWKPR.XLSX')
             for i in f:
                 if 'masterfile' in i.filename.lower():
                     convert_masterfile(i)
                 if 'twkpr' in i.filename.lower():
-                    if 'TWKPR.XLS' in os.listdir(uploads):
-                        os.remove(f'{uploads}/TWKPR.XLS')
-                    if 'TWKPR.XLSX' in os.listdir(uploads):
-                        os.remove(f'{uploads}/TWKPR.XLSX')
                     filename = secure_filename(i.filename)
                     i.save(os.path.join(uploads, filename))
                     convertNT(form.client.data)
                     os.remove(f'{uploads}/TWKPR.XLS')
                     os.remove(f'{uploads}/TWKPR.XLSX')
+        elif form.client.data == 'Novatime':
+            if 'TWKPR.XLS' in os.listdir(uploads):
+                os.remove(f'{uploads}/TWKPR.XLS')
+            if 'TWKPR.XLSX' in os.listdir(uploads):
+                os.remove(f'{uploads}/TWKPR.XLSX')
+            for i in f:
+                filename = secure_filename(i.filename)
+                i.save(os.path.join(uploads, filename))
+                convertNT()
+                os.remove(f'{uploads}/TWKPR.XLS')
+                os.remove(f'{uploads}/TWKPR.XLSX')
         else:
             flash("Not Yet Supported", 'danger')
             return render_template("home.html", form=form)

@@ -83,6 +83,9 @@ def create_generic_import(data, markup, customer_name=None):
     Argument 'customer_name' is optional.
     Markup is requird. Must be a float. Example: 1.165
     '''
+
+    if customer_name == None:
+        customer_name = ""
     wb = Workbook()
     new_sheet = wb.active
 

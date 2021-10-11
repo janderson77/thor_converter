@@ -5,7 +5,7 @@ from wtforms.validators import DataRequired
 
 
 class FileForm(FlaskForm):
-    client = SelectField('Which client?', render_kw={
+    client = SelectField('Select a Client or VMS', render_kw={
                          'class': "form-select form-control"}, description="Select a client")
     convertFile = MultipleFileField('One or More Excel Files (.xls, .xlsx)',
                                     validators=[DataRequired(), FileAllowed(['xls', 'xlsx'])], render_kw={'accept': '.xls, .xlsx', 'class': 'form-control'})
