@@ -1,10 +1,6 @@
 from openpyxl import load_workbook
 from helpers import Employee, create_adjustment_import, create_generic_import
 
-# imports the Masterfile
-# wb = load_workbook(filename="masterfile.xlsx", read_only=True)
-# sheet = wb.active
-
 
 def collect_sheet_names(input):
     """
