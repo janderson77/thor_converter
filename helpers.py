@@ -1,7 +1,6 @@
 from dataclasses import dataclass
 from openpyxl import Workbook
 from openpyxl.styles import Alignment
-from tempfile import NamedTemporaryFile
 
 center_aligned_text = Alignment(horizontal='center')
 
