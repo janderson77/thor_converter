@@ -18,7 +18,9 @@ app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
 ALLOWED_EXTENSIONS = {'xls', 'xlsx'}
 
 cwd = Path.cwd()
-uploads = PurePath(cwd, 'uploads')
+path = PurePath(cwd, 'uploads')
+uploads = Path(path)
+
 app.config['UPLOADS_FOLDER'] = uploads
 
 
