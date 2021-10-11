@@ -19,13 +19,9 @@ ALLOWED_EXTENSIONS = {'xls', 'xlsx'}
 
 cwd = Path.cwd()
 path = PurePath(cwd, 'uploads')
-tmp_upload = '/tmp/'
-# uploads = Path(path)
+uploads = Path(path)
 
-# app.config['UPLOADS_FOLDER'] = uploads
-app.config['UPLOADS_FOLDER_HEROKU'] = tmp_upload
-
-uploads = app.config['UPLOADS_FOLDER_HEROKU']
+app.config['UPLOADS_FOLDER'] = uploads
 
 
 def allowed_file(filename):
@@ -54,41 +50,43 @@ def show_home_page():
     form.client.choices = d
 
     if form.validate_on_submit():
-        if 'Converted.zip' in os.listdir(tmp_upload):
-            os.remove(f'{tmp_upload}/Converted.zip')
+        if 'Converted.zip' in os.listdir(uploads):
+            os.remove(f'{uploads}/Converted.zip')
         f = request.files.getlist(form.convertFile.name)
         if form.client.data == 'Papa Pita Bakery':
-            if 'TWKPR.XLS' in os.listdir(tmp_upload):
-                os.remove(f'{tmp_upload}/TWKPR.XLS')
-            if 'TWKPR.XLSX' in os.listdir(tmp_upload):
-                os.remove(f'{tmp_upload}/TWKPR.XLSX')
+            if 'TWKPR.XLS' in os.listdir(uploads):
+                os.remove(f'{uploads}/TWKPR.XLS')
+            if 'TWKPR.XLSX' in os.listdir(uploads):
+                os.remove(f'{uploads}/TWKPR.XLSX')
             for i in f:
                 if 'masterfile' in i.filename.lower():
                     convert_masterfile(i)
                 if 'twkpr' in i.filename.lower():
                     filename = secure_filename(i.filename)
-                    i.save(os.path.join(tmp_upload, filename))
+                    p_object_path = PurePath(uploads, filename)
+                    obj_path = Path(p_object_path)
+                    i.save(obj_path)
                     convertNT(form.client.data)
-                    os.remove(f'{tmp_upload}/TWKPR.XLS')
-                    os.remove(f'{tmp_upload}/TWKPR.XLSX')
+                    os.remove(f'{uploads}/TWKPR.XLS')
+                    os.remove(f'{uploads}/TWKPR.XLSX')
         elif form.client.data == 'Novatime':
-            if 'TWKPR.XLS' in os.listdir(tmp_upload):
-                os.remove(f'{tmp_upload}/TWKPR.XLS')
-            if 'TWKPR.XLSX' in os.listdir(tmp_upload):
-                os.remove(f'{tmp_upload}/TWKPR.XLSX')
+            if 'TWKPR.XLS' in os.listdir(uploads):
+                os.remove(f'{uploads}/TWKPR.XLS')
+            if 'TWKPR.XLSX' in os.listdir(uploads):
+                os.remove(f'{uploads}/TWKPR.XLSX')
             for i in f:
                 filename = secure_filename(i.filename)
-                i.save(os.path.join(tmp_upload, filename))
+                i.save(os.path.join(uploads, filename))
                 convertNT()
-                os.remove(f'{tmp_upload}/TWKPR.XLS')
-                os.remove(f'{tmp_upload}/TWKPR.XLSX')
+                os.remove(f'{uploads}/TWKPR.XLS')
+                os.remove(f'{uploads}/TWKPR.XLSX')
         else:
             flash("Not Yet Supported", 'danger')
             return render_template("home.html", form=form)
 
         zipFilesInDir('uploads', 'downloads', lambda name: 'xlsx' in name)
         try:
-            return send_from_directory(app.config['UPLOADS_FOLDER_HEROKU'], 'Converted.zip')
+            return send_from_directory(app.config['UPLOADS_FOLDER'], 'Converted.zip')
         except:
             abort(404)
 
