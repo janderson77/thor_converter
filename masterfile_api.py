@@ -148,12 +148,10 @@ def convert_masterfile(input):
     Converts all collected employee data from the Masterfile into importable excel files. DSD Managers is treated uniquely as they have cell phone adjustments.
     """
     wb = load_workbook(input, read_only=True)
-    sheet = wb.active
 
     sheets = collect_sheet_names(wb)
     data = []
     special_data = []
-    files = []
 
     for s in sheets:
         row = find_data_row(wb[s])
