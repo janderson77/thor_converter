@@ -26,7 +26,7 @@ def convertNT(client_name=None):
 
     # Opens the Novatime export, saves it as xlsx
     fname = PurePath(uploads, 'TWKPR.XLS')
-    p.save_book_as(file_name=fname, dest_file_name=f'{fname}x'.lower())
+    p.save_book_as(file_name=fname, dest_file_name=f'{fname}X')
 
     # Opens the new xlsx file for manipulation
     wb = load_workbook(PurePath(uploads, 'TWKPR.XLSX'), read_only=True)
