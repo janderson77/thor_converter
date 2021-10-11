@@ -13,10 +13,7 @@ from zipfile import ZipFile
 
 app = Flask(__name__)
 
-app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
-
-SECRET_KEY = os.urandom(32)
-app.config['SECRET_KEY'] = SECRET_KEY
+app.config['SECRET_KEY'] = os.environ.get('secret_key')
 
 ALLOWED_EXTENSIONS = {'xls', 'xlsx'}
 
