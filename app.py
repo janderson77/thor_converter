@@ -19,7 +19,7 @@ ALLOWED_EXTENSIONS = {'xls', 'xlsx'}
 
 cwd = Path.cwd()
 path = PurePath(cwd, 'uploads')
-tmp_upload = '/app/tmp/'
+tmp_upload = '/tmp/'
 # uploads = Path(path)
 
 # app.config['UPLOADS_FOLDER'] = uploads
