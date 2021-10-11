@@ -1,7 +1,7 @@
 from openpyxl import load_workbook
 from openpyxl.styles import Alignment
 from helpers import Employee, create_generic_import
-import win32com.client as win32
+import pandas as pd
 import os
 
 
@@ -20,14 +20,10 @@ def convertNT(client_name=None):
 
     # Opens the Novatime export, saves it as xlsx
     fname = os.path.abspath('uploads/TWKPR.XLS')
-    excel = win32.gencache.EnsureDispatch('Excel.Application')
-    toSave = excel.Workbooks.Open(fname)
-    toSave.SaveAs(fname+"X", FileFormat=51)
-    toSave.Close()
-    excel.Application.Quit()
+    df = pd.read_excel(fname, header=None)
+    df.to_excel(f'{fname}X'.lower(), index=False, header=False)
 
-    # # Opens the new xlsx file for manipulation
-    # ***********BROKEN HERE
+    # Opens the new xlsx file for manipulation
     wb = load_workbook(os.path.abspath('uploads/TWKPR.XLSX'), read_only=True)
     sheet = wb.active
     center_aligned_text = Alignment(horizontal="center")
