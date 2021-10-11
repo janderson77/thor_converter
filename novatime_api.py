@@ -1,7 +1,7 @@
 from openpyxl import load_workbook
 from openpyxl.styles import Alignment
 from helpers import Employee, create_generic_import
-import pandas as pd
+import pyexcel as p
 import os
 
 
@@ -20,8 +20,7 @@ def convertNT(client_name=None):
 
     # Opens the Novatime export, saves it as xlsx
     fname = os.path.abspath('uploads/TWKPR.XLS')
-    df = pd.read_excel(fname, header=None)
-    df.to_excel(f'{fname}X'.lower(), index=False, header=False)
+    p.save_book_as(file_name=fname, dest_file_name=f'{fname}x'.lower())
 
     # Opens the new xlsx file for manipulation
     wb = load_workbook(os.path.abspath('uploads/TWKPR.XLSX'), read_only=True)
