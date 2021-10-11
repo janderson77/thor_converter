@@ -2,7 +2,6 @@ import os
 from os.path import basename
 from flask import Flask, request, flash, redirect, abort, send_from_directory
 from flask.templating import render_template
-from flask_debugtoolbar import DebugToolbarExtension
 from werkzeug.utils import secure_filename
 from forms import FileForm
 import json
@@ -15,7 +14,6 @@ from zipfile import ZipFile
 app = Flask(__name__)
 
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
-toolbar = DebugToolbarExtension(app)
 
 SECRET_KEY = os.urandom(32)
 app.config['SECRET_KEY'] = SECRET_KEY
