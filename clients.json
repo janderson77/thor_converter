@@ -1,11 +1,6 @@
 {
     "Clients": [
         {
-            "id" : "1",
-            "name" : "Novatime",
-            "sources": ["Novatime"] 
-        },
-        {
             "id" : "2",
             "name" : "Papa Pita Bakery",
             "reg_markup" : "1.165",

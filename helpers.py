@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from openpyxl import Workbook
 from openpyxl.styles import Alignment
+import io
 
 center_aligned_text = Alignment(horizontal='center')
 
@@ -175,6 +176,12 @@ def create_generic_import(data, markup, customer_name=None):
 
     # Saves as a new file
     if customer_name == 'Papa Pita' or 'Papa Pita Bakery':
-        wb.save(filename=f'uploads/{customer_name} {data[0]} Import File.xlsx')
+        file = io.BytesIO()
+        wb.save(file)
+        file.seek(0)
+        return([file, 'Papa Pita Novatime Import'])
     else:
-        wb.save(filename=f'uploads/{customer_name} Import File.xlsx')
+        file = io.BytesIO()
+        wb.save(file)
+        file.seek(0)
+        return([file, f'{customer_name} Import'])
