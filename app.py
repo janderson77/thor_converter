@@ -32,16 +32,6 @@ def allowed_file(filename):
         filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
-def zipFilesInDir(dirName, zipFileName, filter):
-    with ZipFile('uploads/Converted.zip', 'w') as zipObj:
-        for folderName, subfolders, filenames in os.walk(dirName):
-            for filename in filenames:
-                if filter(filename):
-                    filePath = os.path.join(folderName, filename)
-                    zipObj.write(filePath, basename(filePath))
-                    os.remove(filePath)
-
-
 @app.route('/', methods=["GET", "POST"])
 def show_home_page():
     c = open('clients.json')
