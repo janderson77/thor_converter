@@ -1,10 +1,7 @@
 from io import BytesIO
-import os
 import time
-from os.path import basename
-from flask import Flask, request, flash, redirect, abort, send_file, send_from_directory
+from flask import Flask, request, flash, abort, send_file, send_from_directory
 from flask.templating import render_template
-from werkzeug.utils import secure_filename
 from forms import FileForm
 import json
 from masterfile_api import convert_masterfile
