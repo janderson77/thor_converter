@@ -67,7 +67,7 @@ def show_home_page():
             flash("No file uploaded", 'danger')
             return render_template("home.html", form=form)
 
-        elif len(files) > 1:
+        elif len(files) == 1:
             try:
                 return send_file(
                     files[0][0],
