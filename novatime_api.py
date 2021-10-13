@@ -2,7 +2,6 @@ from openpyxl import Workbook, load_workbook
 from openpyxl.styles import Alignment
 from helpers import Employee, create_generic_import
 import pyexcel as p
-from io import BytesIO
 
 
 def newTimecard(id, type, hours):
