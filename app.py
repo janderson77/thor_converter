@@ -1,6 +1,6 @@
 from io import BytesIO
 import time
-from flask import Flask, request, flash, abort, send_file, send_from_directory
+from flask import Flask, request, flash, abort, send_file
 from flask.templating import render_template
 from forms import FileForm
 import json
