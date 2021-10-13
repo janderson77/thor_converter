@@ -179,7 +179,7 @@ def create_generic_import(data, markup, customer_name=None):
         file = io.BytesIO()
         wb.save(file)
         file.seek(0)
-        return([file, 'Papa Pita Novatime Import'])
+        return([file, f'Papa Pita {data[0]} Import'])
     else:
         file = io.BytesIO()
         wb.save(file)
