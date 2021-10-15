@@ -42,6 +42,7 @@ def show_home_page():
     if form.validate_on_submit():
         f = request.files.getlist(form.convertFile.name)
         files = []
+        print(form.client.data)
         if form.client.data == 'Papa Pita Bakery':
             for i in f:
                 if 'masterfile' in i.filename.lower() or 'master' in i.filename.lower():
