@@ -38,6 +38,7 @@ def create_adjustment_import(data, adjust_id, customer_name=None):
     '''
     Creates an adjustment import file with the provided data.
     Data must be in a 2d array, with index 0 of the main array being the sheet name, and index 1 the employee timecard data array.
+    Enter the appropriate adjustment ID for the adjustment being made.
     Argument 'customer_name' is optional.
     '''
     wb = Workbook()
@@ -80,8 +81,8 @@ def create_generic_import(data, markup, customer_name=None):
     '''
     Creates a generic timecard import with the provided data.
     Data must be in a 2d array, with index 0 of the main array being the sheet name, and index 1 the employee timecard data array.
-    Argument 'customer_name' is optional.
     Markup is requird. Must be a float. Example: 1.165
+    Argument 'customer_name' is optional.
     '''
 
     if customer_name == None:
