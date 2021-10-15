@@ -176,7 +176,7 @@ def create_generic_import(data, markup, customer_name=None):
             sheet_row += 1
 
     # Saves as a new file
-    if customer_name == 'Papa Pita' or 'Papa Pita Bakery':
+    if customer_name == 'Papa Pita' or customer_name == 'Papa Pita Bakery':
         file = io.BytesIO()
         wb.save(file)
         file.seek(0)
@@ -185,4 +185,4 @@ def create_generic_import(data, markup, customer_name=None):
         file = io.BytesIO()
         wb.save(file)
         file.seek(0)
-        return([file, f'{customer_name} Import'])
+        return([file, f'{customer_name} Generic Import'])
