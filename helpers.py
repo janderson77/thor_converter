@@ -122,7 +122,7 @@ def create_generic_import(data, markup, customer_name=None):
         # Sets column C to the value of the customer name or None
         new_sheet.cell(row=sheet_row, column=3).value = customer_name
 
-        if customer_name == 'Papa Pita Bakery':
+        if customer_name.lower() == 'papa pita bakery' or customer_name.lower() == "papa pita":
             if e.id == 293355:  # Sets payrate to specified if they are a special case employee
                 new_sheet.cell(row=sheet_row, column=4).value = 100
                 new_sheet.cell(row=sheet_row, column=5).value = 116.5
