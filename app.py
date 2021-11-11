@@ -7,7 +7,6 @@ import json
 from masterfile_api import convert_masterfile
 from helpers import getRandomPhrase
 from novatime_api import convertNT
-from pathlib import Path, PurePath
 from zipfile import ZipFile, ZipInfo, ZIP_DEFLATED
 
 
@@ -17,13 +16,6 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'aognaognag'
 
 ALLOWED_EXTENSIONS = {'xls', 'xlsx'}
-
-cwd = Path.cwd()
-path = PurePath(cwd, 'uploads')
-uploads = Path(path)
-
-app.config['UPLOADS_FOLDER'] = uploads
-
 
 def allowed_file(filename):
     return '.' in filename and \
