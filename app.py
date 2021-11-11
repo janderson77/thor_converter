@@ -5,6 +5,7 @@ from flask.templating import render_template
 from forms import FileForm
 import json
 from masterfile_api import convert_masterfile
+from helpers import getRandomPhrase
 from novatime_api import convertNT
 from pathlib import Path, PurePath
 from zipfile import ZipFile, ZipInfo, ZIP_DEFLATED
@@ -38,6 +39,7 @@ def show_home_page():
         d.append(i['name'])
     form = FileForm()
     form.client.choices = d
+    phrase = getRandomPhrase()
 
     if form.validate_on_submit():
         f = request.files.getlist(form.convertFile.name)
@@ -93,4 +95,4 @@ def show_home_page():
             except:
                 abort(404)
 
-    return render_template("home.html", form=form)
+    return render_template("home.html", form=form, phrase=phrase)

@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from openpyxl import Workbook
 from openpyxl.styles import Alignment
 import io
+from random import randrange
 
 center_aligned_text = Alignment(horizontal='center')
 
@@ -186,3 +187,8 @@ def create_generic_import(data, markup, customer_name=None):
         wb.save(file)
         file.seek(0)
         return([file, f'{customer_name} Generic Import'])
+
+def getRandomPhrase():
+    phraseIndex = randrange(4)
+    phrases = ["Crack the Sky", "Let Your Hammer Fly", "Call Down the Lightning", "To Valhalla and Back"]
+    return phrases[phraseIndex]
