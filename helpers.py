@@ -191,4 +191,4 @@ def create_generic_import(data, markup, customer_name=None):
 def getRandomPhrase():
     phraseIndex = randrange(4)
     phrases = ["Crack the Sky", "Let Your Hammer Fly", "Call Down the Lightning", "To Valhalla and Back"]
-    return phrases[phraseIndex]
+    return phrases[phraseIndex-1]
