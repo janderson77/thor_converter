@@ -50,7 +50,7 @@ def show_home_page():
                     for j in export:
                         files.append(j)
                 if 'twkpr' in i.filename.lower():
-                    export = convertNT(i)
+                    export = convertNT(i, "Papa Pita")
                     files.append(export)
         elif form.client.data == 'Novatime':
             for k in f:
