@@ -14,7 +14,7 @@ def collect_hours(sheet):
         elif row[3] != None and row[3].lower() == "holiday":
             data[len(data)-1].holiday += float(row[5])
         elif row[0] == None and row[2] == None and row[5] != None:
-            data[len(data)-1].reg += row[5]
+            data[len(data)-1].reg += float(row[5])
         else:
             continue
         
