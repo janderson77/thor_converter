@@ -73,7 +73,7 @@ def show_home_page():
                     mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
                 )
             except:
-                flash("File not processed")
+                flash("File not processed. Please see Administrator")
                 return render_template("home.html", phrase=phrase, form=form)
 
         else:
