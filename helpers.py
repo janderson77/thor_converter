@@ -9,7 +9,7 @@ center_aligned_text = Alignment(horizontal='center')
 
 @dataclass
 class Employee:
-    id: int
+    id: int = None
     reg: float = 0
     ot1: float = 0
     salary: float = 0
@@ -17,6 +17,7 @@ class Employee:
     bonus: float = 0
     expenses: float = 0
     adjustment: float = 0
+    holiday: float = 0
 
 
 @dataclass
@@ -28,6 +29,13 @@ class Columns:
     commission: int = 0,
     expenses: int = 0
 
+def collect_sheet_names(input, limit):
+    """
+    Collects the names of the sheets in a workbook.
+    Stops at sheet the given limit as there may be sheets with no data or useful data beyond that
+    """
+    useful_sheets = input.sheetnames
+    return useful_sheets[:limit]
 
 def char_range(c1, c2):
     '''Created the ability to iterate over a range of characters for easier tweaking of cells in a row'''
@@ -174,6 +182,14 @@ def create_generic_import(data, markup, customer_name=None):
             new_sheet.cell(row=sheet_row, column=10).value = 1
             new_sheet.cell(row=sheet_row, column=11).value = e.bonus
             new_sheet.cell(row=sheet_row, column=12).value = (e.bonus * markup)
+            sheet_row += 1
+
+        if e.holiday:
+            new_sheet.cell(row=sheet_row, column=2).value = e.id
+            new_sheet.cell(row=sheet_row, column=3).value = customer_name
+            new_sheet.cell(row=sheet_row, column=9).value = 'Hol'
+            new_sheet.cell(row=sheet_row, column=6).value = e.holiday
+            
             sheet_row += 1
 
     # Saves as a new file

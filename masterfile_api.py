@@ -1,15 +1,5 @@
 from openpyxl import load_workbook
-from helpers import Employee, create_adjustment_import, create_generic_import
-
-
-def collect_sheet_names(input):
-    """
-    Collects the names of the sheets in the workbook.
-    Stops at sheet 5 as there are hidden sheets with no data or useful data beyond that
-    """
-    useful_sheets = input.sheetnames
-    return useful_sheets[:6]
-
+from helpers import Employee, create_adjustment_import, create_generic_import, collect_sheet_names
 
 def collect_hours(row, number):
     """Collects hours data from the appropriate cells"""
@@ -149,7 +139,7 @@ def convert_masterfile(input):
     """
     wb = load_workbook(input, read_only=True)
 
-    sheets = collect_sheet_names(wb)
+    sheets = collect_sheet_names(wb,6)
     data = []
     special_data = []
     to_export = []
@@ -169,7 +159,7 @@ def convert_masterfile(input):
     if len(special_data) > 0:
         for d in special_data:
             gen_res = create_generic_import(d, 1.165, "Papa Pita")
-            adj_res = create_adjustment_import(d, 48, "Papa Pita")
+            # adj_res = create_adjustment_import(d, 48, "Papa Pita")
             to_export.append(gen_res)
             # to_export.append(adj_res)
 

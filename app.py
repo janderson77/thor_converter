@@ -9,6 +9,8 @@ from helpers import getRandomPhrase
 from novatime_api import convertNT
 from zipfile import ZipFile, ZipInfo, ZIP_DEFLATED
 
+from nutraceutical import convert_nutra
+
 
 app = Flask(__name__)
 
@@ -36,7 +38,6 @@ def show_home_page():
     if form.validate_on_submit():
         f = request.files.getlist(form.convertFile.name)
         files = []
-        print(form.client.data)
         if form.client.data == 'Papa Pita Bakery':
             for i in f:
                 if 'masterfile' in i.filename.lower() or 'master' in i.filename.lower():
@@ -50,9 +51,13 @@ def show_home_page():
             for k in f:
                 export = convertNT(k)
                 files.append(export)
+        elif form.client.data == "Nutraceutical":
+            for k in f:
+                export = convert_nutra(k)
+                files.append(export)
         else:
             flash("Not Yet Supported", 'danger')
-            return render_template("home.html", form=form)
+            return render_template("home.html", phrase=phrase, form=form)
 
         # ///////////Start Return Functions///////////
         if len(files) == 0:
@@ -68,7 +73,8 @@ def show_home_page():
                     mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
                 )
             except:
-                abort(404)
+                flash("File not processed")
+                return render_template("home.html", phrase=phrase, form=form)
 
         else:
             memory_file = BytesIO()
