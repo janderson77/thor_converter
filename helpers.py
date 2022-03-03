@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from openpyxl import Workbook
-from openpyxl.styles import Alignment
+from openpyxl.styles import Alignment, numbers
 import io
 from random import randrange
 
@@ -137,8 +137,9 @@ def create_generic_import(data, markup, customer_name=None):
                 new_sheet.cell(row=sheet_row, column=5).value = 116.5
             # Sets bill rate to 0.00 if a Papa Pita employee works less than 4 hours
             elif e.reg != None and e.reg <= 4.00 and data[0] == 'Novatime':
-                new_sheet.cell(row=sheet_row, column=5).value = 0.00
-                new_sheet.cell(row=sheet_row, column=9).value = 'reg agree'
+                new_sheet.cell(row=sheet_row, column=5, value=float(0.00))
+                new_sheet.cell(row=sheet_row, column=5).number_format = numbers.FORMAT_NUMBER_00
+                new_sheet.cell(row=sheet_row, column=9, value=str('reg agree'))
 
         # Sets column F to the value of regular hours
         if e.reg:
