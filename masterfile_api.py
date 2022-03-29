@@ -11,6 +11,9 @@ def collect_hours(row, number):
     elif type(row[number]) == float:
         return row[number]
     elif type(row[number]) == str and len(row[number]) > 0:
+        print(row[number])
+        if row[number] == "#N/A":
+            return None
         if "=" in row[number]:
             return None
         elif "." in row[number]:
