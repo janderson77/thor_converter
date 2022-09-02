@@ -101,9 +101,11 @@ def collect_employee_data(sheet, columns, s_name="None"):
 
 def find_data_row(sheet):
     """Finds the row where the column names live"""
-    label_row = 1
+    label_row = sheet.min_row
     for row in sheet.iter_rows(min_row=sheet.min_row, max_row=sheet.max_row, values_only=True):
-        if row[0] == "Emp #":
+        if "Emp #" not in row:
+            label_row += 1
+        elif row[0] == "Emp #":
             return label_row
         else:
             label_row += 1
@@ -130,7 +132,7 @@ def find_data_column(sheet, row):
         data_row = row
 
     for i, v in enumerate(data_row[:24]):
-        if v == None:
+        if v == None or type(v) == None:
             continue
         if "Reg Hrs 1 Week" in v or "reg hrs week 1" in v.lower() or "reg hrs week1" in v.lower():
             columns['reg1'] = i

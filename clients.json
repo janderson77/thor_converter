@@ -1,18 +1,18 @@
 {
     "Clients": [
         {
-            "id": 1,
-            "name": "Novatime",
-            "sources": ["Novatime"]
-        },
-        {
-            "id" : "2",
+            "id" : "1",
             "name" : "Papa Pita Bakery",
             "reg_markup" : "1.165",
             "ot_makrup" : "1.165",
             "dt_markup" : "1.165",
             "bonus_markup" : "1.165",
             "sources": ["Novatime", "masterfile"]
+        },
+        {
+            "id": 2,
+            "name": "Novatime",
+            "sources": ["Novatime"]
         },
         {
             "id" : "3",
