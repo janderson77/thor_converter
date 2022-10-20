@@ -90,7 +90,7 @@ def create_adjustment_import(data, adjust_id, customer_name=None):
 def create_pbm_import(data):
     '''
     Creates a PBM import with the provided data.
-    Data must be in an list, and index must be in a "Employee" dataclass format.
+    Data must be in an list, and data must be in a "Employee" dataclass format.
     '''
 
     sheet = p.Sheet()
