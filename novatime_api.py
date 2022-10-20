@@ -18,8 +18,9 @@ def convertNT(export, client_name=None):
     # List for the Employee data to be stored
     data = []
 
-    # Opens the Novatime export and iterates over it
+    # Opens the Novatime export
     xlsSheet = p.get_sheet(file_type="xls", file_content=export)
+    # Iterates over the Novatime export
     for row in xlsSheet:
         # If there is already data in the data list
         if len(data) > 0:
