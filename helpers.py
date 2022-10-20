@@ -3,6 +3,7 @@ from openpyxl import Workbook
 from openpyxl.styles import Alignment, numbers
 import io
 from random import randrange
+import pyexcel as p
 
 center_aligned_text = Alignment(horizontal='center')
 
@@ -85,6 +86,32 @@ def create_adjustment_import(data, adjust_id, customer_name=None):
     # Saves as a new file
     return wb.save(filename=f'uploads/{customer_name} Adjustment Import File.xlsx')
 
+
+def create_pbm_import(data):
+    '''
+    Creates a PBM import with the provided data.
+    Data must be in an list, and index must be in a "Employee" dataclass format.
+    '''
+
+    sheet = p.Sheet()
+
+    sheet[0,0] = "Co Code"
+    sheet[0,1] = "Batch ID"
+    sheet[0,2] = "File #"
+    sheet[0,3] = "Reg"
+    sheet[0,4] = "O/T Hours"
+
+    row = 1
+
+    for emp in data:
+        sheet[row,2] = emp.id
+        sheet[row,3] = emp.reg
+        sheet[row,4] = emp.ot1
+        row += 1
+
+    s = sheet.save_to_memory(file_type='xls')
+
+    return([s, "PBM Import"])
 
 def create_generic_import(data, markup, customer_name=None):
     '''

@@ -1,4 +1,4 @@
-from helpers import Employee
+from helpers import Employee, create_pbm_import
 import pyexcel as p
 
 def newTimecard(id, reg=0, ot=0):
@@ -8,13 +8,13 @@ def newTimecard(id, reg=0, ot=0):
     employee.ot1 = ot
     return employee
 
-def convertPBM():
+def convertPBM(export):
     # List for the Employee data to be stored
     data = []
     tempID = 0
 
     # Opens the PBM provided spreadsheet
-    xlsSheet = p.get_sheet(file_name="PBM.xls", start_row=10)
+    xlsSheet = p.get_sheet(file_type="xls", file_content=export, start_row=10)
 
     # Iterates over the sheet
     for row in xlsSheet:
@@ -38,8 +38,4 @@ def convertPBM():
             tc = newTimecard(tempID, temp_data[3], temp_data[4])
             data.append(tc)
 
-    
-    # for entry in data:
-    #     print([entry.id, entry.reg, entry.ot1])
-
-convertPBM()
+    return create_pbm_import(data)

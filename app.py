@@ -10,6 +10,7 @@ from novatime_api import convertNT
 from zipfile import ZipFile, ZipInfo, ZIP_DEFLATED
 
 from nutraceutical import convert_nutra
+from pbm import convertPBM
 
 
 app = Flask(__name__)
@@ -55,6 +56,10 @@ def show_home_page():
             for k in f:
                 export = convert_nutra(k)
                 files.append(export)
+        elif form.client.data == "PBM":
+            for k in f:
+                export = convertPBM(k)
+                files.append(export)
         else:
             flash("Not Yet Supported", 'danger')
             return render_template("home.html", phrase=phrase, form=form)
@@ -65,16 +70,28 @@ def show_home_page():
             return render_template("home.html", form=form)
 
         elif len(files) == 1:
-            try:
-                return send_file(
-                    files[0][0],
-                    as_attachment=True,
-                    download_name=f'{files[0][1]}.xlsx',
-                    mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-                )
-            except:
-                flash("File not processed. Please see Administrator")
-                return render_template("home.html", phrase=phrase, form=form)
+            if form.client.data == "PBM":
+                try:
+                    return send_file(
+                        files[0][0],
+                        as_attachment=True,
+                        download_name=f'{files[0][1]}.xls',
+                        mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                    )
+                except:
+                    flash("File not processed. Please see Administrator")
+                    return render_template("home.html", phrase=phrase, form=form)
+            else:
+                try:
+                    return send_file(
+                        files[0][0],
+                        as_attachment=True,
+                        download_name=f'{files[0][1]}.xlsx',
+                        mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                    )
+                except:
+                    flash("File not processed. Please see Administrator")
+                    return render_template("home.html", phrase=phrase, form=form)
 
         else:
             memory_file = BytesIO()

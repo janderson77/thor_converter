@@ -10,12 +10,17 @@
             "sources": ["Novatime", "masterfile"]
         },
         {
-            "id": 2,
+            "id": "2",
+            "name": "PBM",
+            "sources": ["Customer"]
+        },
+        {
+            "id": "3",
             "name": "Novatime",
             "sources": ["Novatime"]
         },
         {
-            "id" : "3",
+            "id" : "4",
             "name" : "Nutraceutical",
             "reg_markup" : "1.30",
             "ot_makrup" : "1.30",
