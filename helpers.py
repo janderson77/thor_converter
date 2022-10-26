@@ -98,7 +98,7 @@ def create_pbm_import(data):
     sheet[0,0] = "Co Code"
     sheet[0,1] = "Batch ID"
     sheet[0,2] = "File #"
-    sheet[0,3] = "Reg"
+    sheet[0,3] = "Reg Hours"
     sheet[0,4] = "O/T Hours"
 
     row = 1
