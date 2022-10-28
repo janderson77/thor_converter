@@ -1,4 +1,4 @@
-from openpyxl import load_workbook
+from openpyxl import load_workbook, Workbook
 from helpers import collect_sheet_names
 
 def get_teckpack_data(sheet):
@@ -21,7 +21,9 @@ def clear_sheet_data(sheet):
     return sheet
 
 def insert_sheet_data(sheet, data):
-    print("working on this")
+    return sheet
+
+WB = Workbook()
 
 wb = load_workbook(filename='Tech Pack Hours 101622.xlsx')
 source = wb.active
@@ -30,10 +32,10 @@ sheets = collect_sheet_names(wb,1)
 
 gotten_data = get_teckpack_data(wb[sheets[0]])
 
-hazleton = clear_sheet_data(wb.copy_worksheet(source))
-hazleton_custom = clear_sheet_data(wb.copy_worksheet(source))
+clear_sheet_data(wb.worksheets[0])
+print(wb.worksheets)
 
-hazleton = insert_sheet_data(hazleton, gotten_data[0])
-hazleton_custom = insert_sheet_data(hazleton_custom, gotten_data[1])
+wb.save("huh.xlsx")
+
 
 
