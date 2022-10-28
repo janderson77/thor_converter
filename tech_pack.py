@@ -1,6 +1,5 @@
-from openpyxl import load_workbook, Workbook
+from openpyxl import load_workbook
 from helpers import collect_sheet_names
-from operator import itemgetter
 
 def get_teckpack_data(sheet):
     hazleton_data = []
