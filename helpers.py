@@ -23,12 +23,12 @@ class Employee:
 
 @dataclass
 class Columns:
-    reg: float = 0,
-    ot1: float = 0,
-    salary: float = 0,
-    bonus: float = 0,
-    commission: float = 0,
-    expenses: float = 0
+    reg: int = 0
+    ot1: int = 0
+    salary: int = 0
+    bonus: int = 0
+    commission: int = 0
+    expenses: int = 0
 
 
 def collect_sheet_names(input, limit):
