@@ -23,12 +23,13 @@ class Employee:
 
 @dataclass
 class Columns:
-    reg: int = 0,
-    ot1: int = 0,
-    salary: int = 0,
-    bonus: int = 0,
-    commission: int = 0,
-    expenses: int = 0
+    reg: float = 0,
+    ot1: float = 0,
+    salary: float = 0,
+    bonus: float = 0,
+    commission: float = 0,
+    expenses: float = 0
+
 
 def collect_sheet_names(input, limit):
     """
@@ -37,6 +38,7 @@ def collect_sheet_names(input, limit):
     """
     useful_sheets = input.sheetnames
     return useful_sheets[:limit]
+
 
 def char_range(c1, c2):
     '''Created the ability to iterate over a range of characters for easier tweaking of cells in a row'''
@@ -95,23 +97,24 @@ def create_pbm_import(data):
 
     sheet = p.Sheet()
 
-    sheet[0,0] = "Co Code"
-    sheet[0,1] = "Batch ID"
-    sheet[0,2] = "File #"
-    sheet[0,3] = "Reg Hours"
-    sheet[0,4] = "O/T Hours"
+    sheet[0, 0] = "Co Code"
+    sheet[0, 1] = "Batch ID"
+    sheet[0, 2] = "File #"
+    sheet[0, 3] = "Reg Hours"
+    sheet[0, 4] = "O/T Hours"
 
     row = 1
 
     for emp in data:
-        sheet[row,2] = emp.id
-        sheet[row,3] = emp.reg
-        sheet[row,4] = emp.ot1
+        sheet[row, 2] = emp.id
+        sheet[row, 3] = emp.reg
+        sheet[row, 4] = emp.ot1
         row += 1
 
     s = sheet.save_to_memory(file_type='xls')
 
     return([s, "PBM Import"])
+
 
 def create_generic_import(data, markup, customer_name=None):
     '''
@@ -165,7 +168,8 @@ def create_generic_import(data, markup, customer_name=None):
             # Sets bill rate to 0.00 if a Papa Pita employee works less than 4 hours
             elif e.reg != None and e.reg <= 4.00 and data[0] == 'Novatime':
                 new_sheet.cell(row=sheet_row, column=5, value=float(0.00))
-                new_sheet.cell(row=sheet_row, column=5).number_format = numbers.FORMAT_NUMBER_00
+                new_sheet.cell(
+                    row=sheet_row, column=5).number_format = numbers.FORMAT_NUMBER_00
                 new_sheet.cell(row=sheet_row, column=9, value=str('reg agree'))
 
         # Sets column F to the value of regular hours
@@ -217,7 +221,7 @@ def create_generic_import(data, markup, customer_name=None):
             new_sheet.cell(row=sheet_row, column=3).value = customer_name
             new_sheet.cell(row=sheet_row, column=9).value = 'Hol'
             new_sheet.cell(row=sheet_row, column=6).value = e.holiday
-            
+
             sheet_row += 1
 
     # Saves as a new file
@@ -232,7 +236,9 @@ def create_generic_import(data, markup, customer_name=None):
         file.seek(0)
         return([file, f'{customer_name} Generic Import'])
 
+
 def getRandomPhrase():
     phraseIndex = randrange(5)
-    phrases = ["Crack the Sky", "Let Your Hammer Fly", "Call Down the Lightning", "To Valhalla and Back", "Release Asgaard's Fury"]
+    phrases = ["Crack the Sky", "Let Your Hammer Fly", "Call Down the Lightning",
+               "To Valhalla and Back", "Release Asgaard's Fury"]
     return phrases[phraseIndex-1]
