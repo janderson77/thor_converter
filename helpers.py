@@ -19,6 +19,7 @@ class Employee:
     expenses: float = 0
     adjustment: float = 0
     holiday: float = 0
+    vacation: float = None
 
 
 @dataclass
@@ -29,6 +30,7 @@ class Columns:
     bonus: int = 0
     commission: int = 0
     expenses: int = 0
+    vacation: int = 0
 
 
 def collect_sheet_names(input, limit):
@@ -206,7 +208,7 @@ def create_generic_import(data, markup, customer_name=None):
         # Increments the sheet_row variable so that the next set of data is put on a new row
         sheet_row += 1
 
-        # Creates a new row for a bonus timecard, Sets appropriate values and increments sheet_row again.
+        # Creates a new row for a bonus, Holiday or Vacation timecard, Sets appropriate values and increments sheet_row again.
         if e.bonus:
             new_sheet.cell(row=sheet_row, column=2).value = e.id
             new_sheet.cell(row=sheet_row, column=3).value = customer_name
@@ -222,6 +224,14 @@ def create_generic_import(data, markup, customer_name=None):
             new_sheet.cell(row=sheet_row, column=9).value = 'Hol'
             new_sheet.cell(row=sheet_row, column=6).value = e.holiday
 
+            sheet_row += 1
+
+        if e.vacation:
+            new_sheet.cell(row=sheet_row, column=2).value = e.id
+            new_sheet.cell(row=sheet_row, column=3).value = customer_name
+            new_sheet.cell(row=sheet_row, column=9).value=str('vac1')
+            new_sheet.cell(row=sheet_row, column=11).value = e.vacation
+            new_sheet.cell(row=sheet_row, column=12).value = e.vacation*markup
             sheet_row += 1
 
     # Saves as a new file

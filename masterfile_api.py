@@ -48,6 +48,7 @@ def collect_employee_data(sheet, columns, s_name="None"):
                 bonus2 = 0
             commission = collect_hours(row, columns['commission'])
             expenses = collect_hours(row, columns['expenses'])
+            vacation = collect_hours(row, columns['vacation'])
 
             # Adds regular hours to time card, or sets the value to None
             if reg1 != None and reg2 != None:
@@ -94,6 +95,8 @@ def collect_employee_data(sheet, columns, s_name="None"):
                     tc.adjustment = 18
                 else:
                     tc.expenses = round(expenses, 2)
+            if vacation != None:
+                tc.vacation = round(vacation,2)
 
             data.append(tc)
     return data
@@ -122,7 +125,8 @@ def find_data_column(sheet, row):
         "bonus": None,
         "bonus2": 99,
         "commission": None,
-        "expenses": 23
+        "expenses": 23,
+        "vacation": None
 
     }
 
@@ -161,6 +165,8 @@ def find_data_column(sheet, row):
             columns['commission'] = i
         if "Expenses-" in v or "Expenses -" in v:
             columns['expenses'] = i
+        if "Vacation Pay" in v:
+            columns['vacation'] = i
 
     return columns
 
