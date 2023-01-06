@@ -12,7 +12,8 @@ class MaximusTC:
     unit_pay: float = None
     unit_bill: float = None
     hours: float = None
-    adjustment: float = None
+    adjustment_pay: float = None
+    adjustment_bill: float = None
 
 def collect_maximux_data(sheet):
     ws = sheet[sheet.sheetnames[0]]
@@ -61,11 +62,21 @@ def collect_maximux_data(sheet):
             tcdata.append(employee)
 
         else:
-            # InterCS 151
-            # Background 114
-            # Equipment 27
-            employee.paycode = ""
-            continue
+            # If none of the above, must be an adjustment.
+            if "background" in row[1].lower():
+                employee.paycode = "114"
+                employee.adjustment_bill = float(row[3])
+                tcdata.append(employee)
+                continue
+            elif "internet" in row[1].lower():
+                employee.paycode = 151
+            elif "monitor" in row[1].lower():
+                employee.paycode = "27"
+            else:
+                employee.paycode = "ERROR"
+            employee.adjustment_pay = float(row[4])
+            employee.adjustment_bill = float(row[3])
+            tcdata.append(employee)
     return tcdata
     
 
