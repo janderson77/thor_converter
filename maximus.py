@@ -9,7 +9,8 @@ class MaximusTC:
     name: str = None
     paycode: str = None
     line_item_id: str = None
-    unit: float = None
+    unit_pay: float = None
+    unit_bill: float = None
     hours: float = None
     adjustment: float = None
 
@@ -41,13 +42,33 @@ def collect_maximux_data(sheet):
             tcdata.append(employee)
 
         elif "covid" in row[1].lower():
-            continue
+            employee.paycode = "covid-19"
+            totalHours = None
+            ending = row[1].lower().find(" hours")-1
+            starting = row[1].find("(")+1
+            if starting != ending:
+                totalHours = [row[1][starting], row[1][ending]]
+                totalHours = float("".join(totalHours))
+            else:
+                totalHours = float(row[1][starting])
+            employee.hours = totalHours
+            tcdata.append(employee)
+
         elif "bonus" in row[1].lower():
-            continue
+            employee.paycode = "bonus"
+            employee.unit_pay = float(row[4])
+            employee.unit_bill = float(row[3])
+            tcdata.append(employee)
+
         else:
+            # InterCS 151
+            # Background 114
+            # Equipment 27
+            employee.paycode = ""
             continue
     return tcdata
     
 
 test_run = collect_maximux_data(test)
-print(test_run)
+for i in test_run:
+    print(i)
