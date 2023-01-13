@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from openpyxl import load_workbook
+import datetime
 from helpers import Employee, create_adjustment_import, create_generic_import, collect_sheet_names
 
 test = load_workbook("maximus_test_file.xlsx", read_only=True)
@@ -14,6 +15,23 @@ class MaximusTC:
     hours: float = None
     adjustment_pay: float = None
     adjustment_bill: float = None
+    weekend_date: datetime = None
+
+def get_weekend_date(date_string, paycode):
+    # Refactor this code to only have the start be part of the conditional
+    # After finding the start of the date string, the rest should be the same
+    if paycode == "sick":
+        starting = date_string.find("Pay") + 4
+        counter = 0
+        new_date_string = ""
+        while counter <= 7:
+            new_date_string = new_date_string + date_string[starting+counter]
+            counter+=1
+        
+        new_date = datetime.datetime.strptime(new_date_string, '%m/%d/%y')
+        # print(datetime.datetime.weekday(new_date))
+        weekend_date = new_date + datetime.timedelta(days=6-datetime.datetime.weekday(new_date))
+        return weekend_date
 
 def collect_maximux_data(sheet):
     ws = sheet[sheet.sheetnames[0]]
@@ -32,6 +50,9 @@ def collect_maximux_data(sheet):
 
         if "sick" in row[1].lower():
             employee.paycode = "sick"
+
+            employee.weekend_date = get_weekend_date(row[1], employee.paycode)
+
             starting = row[1].find("(")
             sick_hours = ""
             for index, value in enumerate(row[1], start = starting+1):
