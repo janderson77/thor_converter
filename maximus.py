@@ -42,6 +42,10 @@ def get_weekend_date(date_string, paycode):
     return weekend_date
 
 def get_twid(employee, report):
+    '''
+    Gets tempworks employee ID's from an assignment register report and returns them.
+    If the function returns None, then they are not on the report.
+    '''
     for row in report.iter_rows(min_row=6, max_row=9999, values_only=True):
         if row[4] == None:
             break

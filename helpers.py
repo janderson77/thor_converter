@@ -280,21 +280,33 @@ def create_maximus_import(data):
 
     # iterates over the data list
     for e in data[1]:
+        if e.adjustment_pay != None:
+            continue
+
+        # Sets column A to the employee's name
+        new_sheet.cell(row=sheet_row, column=1).value = e.name
+
+        # Sets column B to the value of employee id
+        new_sheet.cell(row=sheet_row, column=2).value = e.twid
+
+        # Sets column C to the value of the req number
+        new_sheet.cell(row=sheet_row, column=3).value = e.line_item_id
+
+        # sets column E to the weekend date
+        new_sheet.cell(row=sheet_row, column=5).value = e.weekend_date
+
         # Sets column K to the value of appropriate paycode
         new_sheet.cell(row=sheet_row, column=11).value = e.paycode
 
-        # Sets column B to the value of employee id
-        new_sheet.cell(row=sheet_row, column=2).value = e.id
-
-        # Sets column F to the value of regular hours
-        if e.reg:
-            new_sheet.cell(row=sheet_row, column=6).value = e.reg
-
-        # Sets column G to the value of OT hours
-        if e.ot1:
-            new_sheet.cell(row=sheet_row, column=7).value = e.ot1
-        elif e.reg and not e.ot1:
-            new_sheet.cell(row=sheet_row, column=7).value = 0
+        # Sets column H to the value of regular hours
+        if e.hours:
+            new_sheet.cell(row=sheet_row, column=8).value = e.hours
+        
+        # Sets column L to 1, M to unit pay and N to unit bill
+        if e.unit_pay:
+            new_sheet.cell(row=sheet_row, column=12).value = 1
+            new_sheet.cell(row=sheet_row, column=13).value = e.unit_pay
+            new_sheet.cell(row=sheet_row, column=14).value = e.unit_bill
 
         # Increments the sheet_row variable so that the next set of data is put on a new row
         sheet_row += 1
