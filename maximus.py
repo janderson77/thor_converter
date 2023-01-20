@@ -112,8 +112,8 @@ def collect_maximux_data(sheet):
     
 
 test_run = collect_maximux_data(test)
-for i in test_run:
-    print(i)
+# for i in test_run:
+#     print(i)
 
 # Usefule for creating the import
 # we_date = datetime.datetime.strptime(datetime.datetime.fromisoformat(str(row[2])).strftime("%m/%d/%y"), '%m/%d/%y')
