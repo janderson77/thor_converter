@@ -22,6 +22,9 @@ def get_weekend_date(date_string, paycode):
     starting = ""
     if paycode == "sick":
         starting = date_string.find("Pay") + 4
+    elif paycode == "covid-19":
+        starting = date_string.find("(")-9
+
     counter = 0
     new_date_string = ""
     while counter <= 7:
@@ -69,6 +72,7 @@ def collect_maximux_data(sheet):
 
         elif "covid" in row[1].lower():
             employee.paycode = "covid-19"
+            employee.weekend_date = get_weekend_date(row[1], employee.paycode)
             totalHours = None
             ending = row[1].lower().find(" hours")-1
             starting = row[1].find("(")+1
@@ -81,6 +85,7 @@ def collect_maximux_data(sheet):
             tcdata.append(employee)
 
         elif "bonus" in row[1].lower():
+            employee.weekend_date = row[2] + datetime.timedelta(days=6-datetime.datetime.weekday(row[2]))
             employee.paycode = "bonus"
             employee.unit_pay = float(row[4])
             employee.unit_bill = float(row[3])
@@ -88,12 +93,11 @@ def collect_maximux_data(sheet):
 
         else:
             # If none of the above, must be an adjustment.
+            employee.weekend_date = row[2] + datetime.timedelta(days=6-datetime.datetime.weekday(row[2]))
             if "background" in row[1].lower():
                 employee.paycode = "114"
-                employee.weekend_date = row[2] + datetime.timedelta(days=6-datetime.datetime.weekday(row[2]))
                 employee.adjustment_bill = float(row[3])
                 tcdata.append(employee)
-                print(employee.weekend_date)
                 continue
             elif "internet" in row[1].lower():
                 employee.paycode = "151"
@@ -108,8 +112,8 @@ def collect_maximux_data(sheet):
     
 
 test_run = collect_maximux_data(test)
-# for i in test_run:
-#     print(i)
+for i in test_run:
+    print(i)
 
 # Usefule for creating the import
 # we_date = datetime.datetime.strptime(datetime.datetime.fromisoformat(str(row[2])).strftime("%m/%d/%y"), '%m/%d/%y')
