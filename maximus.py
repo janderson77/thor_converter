@@ -3,10 +3,15 @@ from openpyxl import load_workbook
 import datetime
 
 test = load_workbook("maximus_test_file.xlsx", read_only=True)
+areg = load_workbook("Assignment_Report_2023-01-09T07_00_00Z_2023-01-19T06_59_59.999Z.xlsx", read_only=True)
+aregreport = areg[areg.sheetnames[0]]
 
 @dataclass
 class MaximusTC:
     name: str = None
+    first: str = None
+    last: str = None
+    twid: int = None
     paycode: str = None
     line_item_id: str = None
     unit_pay: float = None
@@ -36,6 +41,13 @@ def get_weekend_date(date_string, paycode):
     weekend_date = new_date + datetime.timedelta(days=6-datetime.datetime.weekday(new_date))
     return weekend_date
 
+def get_twid(employee, report):
+    for row in report.iter_rows(min_row=6, max_row=9999, values_only=True):
+        if row[4] == None:
+            break
+        if employee.first[:len(employee.first)-1].lower() in row[4].lower() and employee.last[:len(employee.last)-1].lower() in row[4].lower():
+            return int(row[30])
+
 def collect_maximux_data(sheet):
     ws = sheet[sheet.sheetnames[0]]
     tcdata = []
@@ -50,7 +62,13 @@ def collect_maximux_data(sheet):
 
         employee_name_end_index = row[1].find(" -")
         employee.name = row[1][:employee_name_end_index]
+        if "monitor" in employee.name.lower():
+            employee.name = row[1][employee_name_end_index+3:]
+        first_last_split = employee.name.find(" ")
+        employee.first = employee.name[:first_last_split]
+        employee.last = employee.name[first_last_split:]
         employee.line_item_id = row[0]
+        employee.twid = get_twid(employee, aregreport)
 
         if "sick" in row[1].lower():
             employee.paycode = "sick"
@@ -110,8 +128,8 @@ def collect_maximux_data(sheet):
     
 
 test_run = collect_maximux_data(test)
-# for i in test_run:
-#     print(i)
+for i in test_run:
+    print(i)
 
 # Usefule for creating the import
 # we_date = datetime.datetime.strptime(datetime.datetime.fromisoformat(str(row[2])).strftime("%m/%d/%y"), '%m/%d/%y')
