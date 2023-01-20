@@ -246,6 +246,64 @@ def create_generic_import(data, markup, customer_name=None):
         file.seek(0)
         return([file, f'{customer_name} Generic Import'])
 
+def create_maximus_import(data):
+    '''
+    Creates a generic timecard import with the provided data.
+    Data must be in a 2d array, with index 0 of the main array being the sheet name, and index 1 the employee timecard data array.
+    '''
+
+    wb = Workbook()
+    new_sheet = wb.active
+
+    for i in char_range('A', 'G'):
+        new_sheet[f'{i}1'].alignment = center_aligned_text
+
+    new_sheet['A1'] = 'Employee Name'
+    new_sheet['B1'] = 'Emp #'
+    new_sheet['C1'] = 'Req Number'
+    new_sheet['D1'] = 'Cust Name'
+    new_sheet['E1'] = 'WeekendDate'
+    new_sheet['F1'] = 'Pay Rate'
+    new_sheet['G1'] = 'Bill Rate'
+    new_sheet['H1'] = 'Reg Hrs'
+    new_sheet['I1'] = 'OT Hrs'
+    new_sheet['J1'] = 'DT Hrs'
+    new_sheet['K1'] = 'Paycode'
+    new_sheet['L1'] = 'Units'
+    new_sheet['M1'] = 'Unit Pay'
+    new_sheet['N1'] = 'Unit Bill'
+    new_sheet['O1'] = 'Salary Pay'
+    new_sheet['P1'] = 'Salary Bill'
+
+    # Sets the starting row to be edited as row 2
+    sheet_row = 2
+
+    # iterates over the data list
+    for e in data[1]:
+        # Sets column K to the value of appropriate paycode
+        new_sheet.cell(row=sheet_row, column=11).value = e.paycode
+
+        # Sets column B to the value of employee id
+        new_sheet.cell(row=sheet_row, column=2).value = e.id
+
+        # Sets column F to the value of regular hours
+        if e.reg:
+            new_sheet.cell(row=sheet_row, column=6).value = e.reg
+
+        # Sets column G to the value of OT hours
+        if e.ot1:
+            new_sheet.cell(row=sheet_row, column=7).value = e.ot1
+        elif e.reg and not e.ot1:
+            new_sheet.cell(row=sheet_row, column=7).value = 0
+
+        # Increments the sheet_row variable so that the next set of data is put on a new row
+        sheet_row += 1
+
+    # Saves as a new file
+    file = io.BytesIO()
+    wb.save(file)
+    file.seek(0)
+    return([file, f'Maximus Gen Import'])
 
 def getRandomPhrase():
     phraseIndex = randrange(5)
