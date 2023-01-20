@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from openpyxl import load_workbook
 import datetime
 from helpers import Employee, create_adjustment_import, create_generic_import, collect_sheet_names
+from dateutil import parser
 
 test = load_workbook("maximus_test_file.xlsx", read_only=True)
 
@@ -18,20 +19,21 @@ class MaximusTC:
     weekend_date: datetime = None
 
 def get_weekend_date(date_string, paycode):
-    # Refactor this code to only have the start be part of the conditional
-    # After finding the start of the date string, the rest should be the same
+    starting = ""
     if paycode == "sick":
         starting = date_string.find("Pay") + 4
-        counter = 0
-        new_date_string = ""
-        while counter <= 7:
-            new_date_string = new_date_string + date_string[starting+counter]
-            counter+=1
-        
+    counter = 0
+    new_date_string = ""
+    while counter <= 7:
+        new_date_string = new_date_string + date_string[starting+counter]
+        counter+=1
+    
+    if "-" in new_date_string:
+        new_date = datetime.datetime.strptime(new_date_string, '%m/%d/%y').strftime("%m-%d-%y")
+    else:
         new_date = datetime.datetime.strptime(new_date_string, '%m/%d/%y')
-        # print(datetime.datetime.weekday(new_date))
-        weekend_date = new_date + datetime.timedelta(days=6-datetime.datetime.weekday(new_date))
-        return weekend_date
+    weekend_date = new_date + datetime.timedelta(days=6-datetime.datetime.weekday(new_date))
+    return weekend_date
 
 def collect_maximux_data(sheet):
     ws = sheet[sheet.sheetnames[0]]
@@ -47,12 +49,14 @@ def collect_maximux_data(sheet):
 
         employee_name_end_index = row[1].find(" -")
         employee.name = row[1][:employee_name_end_index]
+        employee.line_item_id = row[0]
 
         if "sick" in row[1].lower():
             employee.paycode = "sick"
 
+            # Move up in scope when all paycodes are working
+            # It takes a paycode as an argument
             employee.weekend_date = get_weekend_date(row[1], employee.paycode)
-
             starting = row[1].find("(")
             sick_hours = ""
             for index, value in enumerate(row[1], start = starting+1):
@@ -86,11 +90,15 @@ def collect_maximux_data(sheet):
             # If none of the above, must be an adjustment.
             if "background" in row[1].lower():
                 employee.paycode = "114"
+                
+                we_date = row[2]
+                employee.weekend_date = we_date + datetime.timedelta(days=6-datetime.datetime.weekday(we_date))
                 employee.adjustment_bill = float(row[3])
                 tcdata.append(employee)
+                print(employee.weekend_date)
                 continue
             elif "internet" in row[1].lower():
-                employee.paycode = 151
+                employee.paycode = "151"
             elif "monitor" in row[1].lower():
                 employee.paycode = "27"
             else:
@@ -102,5 +110,8 @@ def collect_maximux_data(sheet):
     
 
 test_run = collect_maximux_data(test)
-for i in test_run:
-    print(i)
+# for i in test_run:
+#     print(i)
+
+# Usefule for creating the import
+# we_date = datetime.datetime.strptime(datetime.datetime.fromisoformat(str(row[2])).strftime("%m/%d/%y"), '%m/%d/%y')
