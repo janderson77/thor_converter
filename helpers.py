@@ -255,7 +255,7 @@ def create_maximus_import(data):
     wb = Workbook()
     new_sheet = wb.active
 
-    for i in char_range('A', 'G'):
+    for i in char_range('A', 'P'):
         new_sheet[f'{i}1'].alignment = center_aligned_text
 
     new_sheet['A1'] = 'Employee Name'
