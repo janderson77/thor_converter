@@ -90,9 +90,7 @@ def collect_maximux_data(sheet):
             # If none of the above, must be an adjustment.
             if "background" in row[1].lower():
                 employee.paycode = "114"
-                
-                we_date = row[2]
-                employee.weekend_date = we_date + datetime.timedelta(days=6-datetime.datetime.weekday(we_date))
+                employee.weekend_date = row[2] + datetime.timedelta(days=6-datetime.datetime.weekday(row[2]))
                 employee.adjustment_bill = float(row[3])
                 tcdata.append(employee)
                 print(employee.weekend_date)
