@@ -63,12 +63,13 @@ def show_home_page():
                 files.append(export)
         elif form.client.data == "Maximus":
             for k in f:
-                if "maximus" in k.filename.lower():
-                    payroll_data = k
-                else:
+                if "assignment" in k.filename.lower():
                     assignment_register = k
+                else:
+                    payroll_data = k
             export = convert_maximus(payroll_data, assignment_register)
-            files.append(export)
+            for e in export:
+                files.append(e)
 
                 
         else:

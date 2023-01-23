@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from openpyxl import load_workbook
 import datetime
-from helpers import create_maximus_import
+from helpers import create_generic_import_with_req_number, create_adjustment_import_with_req_number
 
 test = load_workbook("maximus_test_file.xlsx", read_only=True)
 areg = load_workbook("Assignment_Report_2023-01-09T07_00_00Z_2023-01-19T06_59_59.999Z.xlsx", read_only=True)
@@ -133,17 +133,19 @@ def collect_maximux_data(maximus_data, assignment_register):
 
 def convert_maximus(maximus_data, assignment_register):
     maximus_wb = load_workbook(maximus_data, read_only=True)
-    areg_wb = load_workbook(assignment_register, read_only=True)
     maximus_ws = maximus_wb[maximus_wb.sheetnames[0]]
+    areg_wb = load_workbook(assignment_register, read_only=True)
     areg_ws = areg_wb[areg_wb.sheetnames[0]]
 
     data = []
 
     data.append(collect_maximux_data(maximus_ws, areg_ws))
+    # print(data[0][1])
+    gen_import = create_generic_import_with_req_number(data[0], "Maximus")
+    adjust_import = create_adjustment_import_with_req_number(data[0][1], "Maximus")
 
-    gen_import = create_maximus_import(data[0])
-
-    return gen_import
+    return [gen_import, adjust_import]
+    # return
 
 # test_run = convert_maximus(test, areg)
 

@@ -246,7 +246,7 @@ def create_generic_import(data, markup, customer_name=None):
         file.seek(0)
         return([file, f'{customer_name} Generic Import'])
 
-def create_maximus_import(data):
+def create_generic_import_with_req_number(data, client_name = None):
     '''
     Creates a generic timecard import with the provided data.
     Data must be in a 2d array, with index 0 of the main array being the sheet name, and index 1 the employee timecard data array.
@@ -315,7 +315,60 @@ def create_maximus_import(data):
     file = io.BytesIO()
     wb.save(file)
     file.seek(0)
-    return([file, f'Maximus Gen Import'])
+    if client_name != None:
+        return([file, f'{client_name} Generic Import With Req Number'])
+    else:
+        return([file, f'Generic Import With Req Number'])
+
+def create_adjustment_import_with_req_number(data, client_name=None):
+    '''
+    Creates an adjustment import file with the provided data.
+    '''
+    wb = Workbook()
+    new_sheet = wb.active
+
+    for i in char_range('A', 'F'):
+        new_sheet[f'{i}1'].alignment = center_aligned_text
+
+    new_sheet['A1'] = 'Customer Name'
+    new_sheet['B1'] = 'Adjustment ID'
+    new_sheet['C1'] = 'Employee ID'
+    new_sheet['D1'] = 'Req Number'
+    new_sheet['E1'] = 'Adjustment Pay'
+    new_sheet['F1'] = 'Adjustment Bill'
+
+    # Sets the starting row to be edited as row 2
+    sheet_row = 2
+
+    # iterates over the data list
+    for e in data:
+        if e.hours or e.unit_pay:
+            continue
+        # Sets column B to teh value of the adjustment ID
+        
+        new_sheet.cell(row=sheet_row, column=2).value = int(e.paycode)
+
+        # Sets column C to the value of employee id
+        new_sheet.cell(row=sheet_row, column=3).value = e.twid
+
+        # Sets column D to the req number
+        new_sheet.cell(row=sheet_row, column=4).value = e.line_item_id
+
+        # Sets column E and F to the value of the adjustment
+        new_sheet.cell(row=sheet_row, column=5).value = e.adjustment_pay
+        new_sheet.cell(row=sheet_row, column=6).value = e.adjustment_bill
+
+        sheet_row += 1
+
+    # Saves as a new file and returns the file
+    file = io.BytesIO()
+    wb.save(file)
+    file.seek(0)
+    if client_name != None:
+        return([file, f'{client_name} Adjustment Import With Req Number'])
+    else:
+        return([file, f'Adjustment Import With Req Number'])
+
 
 def getRandomPhrase():
     phraseIndex = randrange(5)
