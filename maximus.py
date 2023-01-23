@@ -3,9 +3,6 @@ from openpyxl import load_workbook
 import datetime
 from helpers import create_generic_import_with_req_number, create_adjustment_import_with_req_number
 
-test = load_workbook("maximus_test_file.xlsx", read_only=True)
-areg = load_workbook("Assignment_Report_2023-01-09T07_00_00Z_2023-01-19T06_59_59.999Z.xlsx", read_only=True)
-
 @dataclass
 class MaximusTC:
     name: str = None
@@ -140,14 +137,11 @@ def convert_maximus(maximus_data, assignment_register):
     data = []
 
     data.append(collect_maximux_data(maximus_ws, areg_ws))
-    # print(data[0][1])
+    
     gen_import = create_generic_import_with_req_number(data[0], "Maximus")
     adjust_import = create_adjustment_import_with_req_number(data[0][1], "Maximus")
 
     return [gen_import, adjust_import]
-    # return
-
-# test_run = convert_maximus(test, areg)
 
 # Usefule for creating the import
 # we_date = datetime.datetime.strptime(datetime.datetime.fromisoformat(str(row[2])).strftime("%m/%d/%y"), '%m/%d/%y')
