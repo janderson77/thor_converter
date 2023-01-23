@@ -279,8 +279,8 @@ def create_maximus_import(data):
     sheet_row = 2
 
     # iterates over the data list
-    for e in data[1]:
-        if e.adjustment_pay != None:
+    for e in data[0]:
+        if e.adjustment_pay:
             continue
 
         # Sets column A to the employee's name

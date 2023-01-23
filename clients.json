@@ -27,6 +27,11 @@
             "dt_markup" : "1.30",
             "bonus_markup" : "1.30",
             "sources": ["Novatime"]
+        },
+        {
+            "id": "5",
+            "name": "Maximus",
+            "sources": ["Customer"]
         }
     ]
 }

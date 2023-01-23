@@ -1,10 +1,10 @@
 from dataclasses import dataclass
 from openpyxl import load_workbook
 import datetime
+from helpers import create_maximus_import
 
 test = load_workbook("maximus_test_file.xlsx", read_only=True)
 areg = load_workbook("Assignment_Report_2023-01-09T07_00_00Z_2023-01-19T06_59_59.999Z.xlsx", read_only=True)
-aregreport = areg[areg.sheetnames[0]]
 
 @dataclass
 class MaximusTC:
@@ -52,11 +52,11 @@ def get_twid(employee, report):
         if employee.first[:len(employee.first)-1].lower() in row[4].lower() and employee.last[:len(employee.last)-1].lower() in row[4].lower():
             return int(row[30])
 
-def collect_maximux_data(sheet):
-    ws = sheet[sheet.sheetnames[0]]
+def collect_maximux_data(maximus_data, assignment_register):
     tcdata = []
+    adjust_data = []
 
-    for row in ws.iter_rows(min_row=ws.min_row, max_row=100, values_only=True):
+    for row in maximus_data.iter_rows(min_row=maximus_data.min_row, max_row=100, values_only=True):
         if row[0] == None:
             break
         if row[0].lower() == "id":
@@ -72,7 +72,7 @@ def collect_maximux_data(sheet):
         employee.first = employee.name[:first_last_split]
         employee.last = employee.name[first_last_split:]
         employee.line_item_id = row[0]
-        employee.twid = get_twid(employee, aregreport)
+        employee.twid = get_twid(employee, assignment_register)
 
         if "sick" in row[1].lower():
             employee.paycode = "sick"
@@ -117,7 +117,7 @@ def collect_maximux_data(sheet):
             if "background" in row[1].lower():
                 employee.paycode = "114"
                 employee.adjustment_bill = float(row[3])
-                tcdata.append(employee)
+                adjust_data.append(employee)
                 continue
             elif "internet" in row[1].lower():
                 employee.paycode = "151"
@@ -127,13 +127,25 @@ def collect_maximux_data(sheet):
                 employee.paycode = "ERROR"
             employee.adjustment_pay = float(row[4])
             employee.adjustment_bill = float(row[3])
-            tcdata.append(employee)
-    return tcdata
+            adjust_data.append(employee)
+    return [tcdata, adjust_data]
     
 
-test_run = collect_maximux_data(test)
-for i in test_run:
-    print(i)
+def convert_maximus(maximus_data, assignment_register):
+    maximus_wb = load_workbook(maximus_data, read_only=True)
+    areg_wb = load_workbook(assignment_register, read_only=True)
+    maximus_ws = maximus_wb[maximus_wb.sheetnames[0]]
+    areg_ws = areg_wb[areg_wb.sheetnames[0]]
+
+    data = []
+
+    data.append(collect_maximux_data(maximus_ws, areg_ws))
+
+    gen_import = create_maximus_import(data[0])
+
+    return gen_import
+
+# test_run = convert_maximus(test, areg)
 
 # Usefule for creating the import
 # we_date = datetime.datetime.strptime(datetime.datetime.fromisoformat(str(row[2])).strftime("%m/%d/%y"), '%m/%d/%y')

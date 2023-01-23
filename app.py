@@ -11,6 +11,7 @@ from zipfile import ZipFile, ZipInfo, ZIP_DEFLATED
 
 from nutraceutical import convert_nutra
 from pbm import convertPBM
+from maximus import convert_maximus
 
 
 app = Flask(__name__)
@@ -60,6 +61,16 @@ def show_home_page():
             for k in f:
                 export = convertPBM(k)
                 files.append(export)
+        elif form.client.data == "Maximus":
+            for k in f:
+                if "maximus" in k.filename.lower():
+                    payroll_data = k
+                else:
+                    assignment_register = k
+            export = convert_maximus(payroll_data, assignment_register)
+            files.append(export)
+
+                
         else:
             flash("Not Yet Supported", 'danger')
             return render_template("home.html", phrase=phrase, form=form)
