@@ -27,14 +27,25 @@ def get_weekend_date(date_string, paycode):
 
     counter = 0
     new_date_string = ""
-    while counter <= 7:
+    while counter <= 9:
         new_date_string = new_date_string + date_string[starting+counter]
-        counter+=1
+        if date_string[starting+counter] == " ":
+            counter = 10
+        else:
+            counter+=1
     
     if "-" in new_date_string:
         new_date = datetime.datetime.strptime(new_date_string, '%m/%d/%y').strftime("%m-%d-%y")
     else:
-        new_date = datetime.datetime.strptime(new_date_string, '%m/%d/%y')
+        try:
+            new_date = datetime.datetime.strptime(new_date_string, '%m/%d/%y').strftime("%m/%d/%y")
+        except ValueError as v:
+            if len(v.args) > 0 and v.args[0].startswith('unconverted data remains:'):
+                new_date_string = new_date_string[0:len(new_date_string)-1]
+                
+                new_date = datetime.datetime.strptime(new_date_string, '%m/%d/%y').strftime("%m/%d/%y")
+        # new_date = datetime.datetime.strptime(new_date_string, '%m/%d/%y').strftime("%m-%d-%y")
+    new_date = datetime.datetime.strptime(new_date, '%m/%d/%y')
     weekend_date = new_date + datetime.timedelta(days=6-datetime.datetime.weekday(new_date))
     return weekend_date
 
@@ -44,7 +55,7 @@ def get_twid(employee, report):
     If the function returns None, then they are not on the report.
     '''
     for row in report.iter_rows(min_row=6, max_row=9999, values_only=True):
-        if row[4] == None:
+        if not row[4]:
             break
         if employee.first[:len(employee.first)-1].lower() in row[4].lower() and employee.last[:len(employee.last)-1].lower() in row[4].lower():
             return int(row[30])

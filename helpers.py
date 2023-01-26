@@ -346,7 +346,10 @@ def create_adjustment_import_with_req_number(data, client_name=None):
             continue
         # Sets column B to teh value of the adjustment ID
         
-        new_sheet.cell(row=sheet_row, column=2).value = int(e.paycode)
+        if(e.paycode == "ERROR"):
+            new_sheet.cell(row=sheet_row, column=2).value = e.paycode
+        else:
+            new_sheet.cell(row=sheet_row, column=2).value = int(e.paycode)
 
         # Sets column C to the value of employee id
         new_sheet.cell(row=sheet_row, column=3).value = e.twid
