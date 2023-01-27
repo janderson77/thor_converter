@@ -327,7 +327,7 @@ def create_adjustment_import_with_req_number(data, client_name=None):
     wb = Workbook()
     new_sheet = wb.active
 
-    for i in char_range('A', 'F'):
+    for i in char_range('A', 'G'):
         new_sheet[f'{i}1'].alignment = center_aligned_text
 
     new_sheet['A1'] = 'Customer Name'
@@ -336,6 +336,8 @@ def create_adjustment_import_with_req_number(data, client_name=None):
     new_sheet['D1'] = 'Req Number'
     new_sheet['E1'] = 'Adjustment Pay'
     new_sheet['F1'] = 'Adjustment Bill'
+    new_sheet['G1'] = 'Invoice Text'
+
 
     # Sets the starting row to be edited as row 2
     sheet_row = 2
