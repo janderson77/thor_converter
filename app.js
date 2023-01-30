@@ -19,5 +19,24 @@ $(() => {
 
     $('form').on('submit', (e) => {
         e.preventDefault();
+        let data = [];
+
+        // Puts the selected client/vms as index 0 for the ajax request
+        data.push($('#client_select option:selected').text())
+
+        // Pushes the file or files to be uploaded to the data array for the ajax request
+        const uploadfiles = $('#convert_files')[0].files;
+        for (let el of uploadfiles) {
+            data.push(el)
+        }
+
+        $.ajax({
+            url: 'http://127.0.0.1:5000/',
+            type: 'POST',
+            data: data,
+            cache: false,
+            contentType: false,
+            processData: false,
+        })
     });
 });
