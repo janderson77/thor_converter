@@ -1,6 +1,6 @@
 from io import BytesIO
 import time
-from flask import Flask, request, flash, abort, send_file, jsonify
+from flask import Flask, request, flash, abort, send_file, jsonify, Response
 from flask.templating import render_template
 from forms import FileForm
 import json
@@ -28,7 +28,7 @@ def allowed_file(filename):
 @app.route('/', methods=["POST"])
 def process_data():
     print(request.files.getlist)
-    
+
     response = jsonify(["this", "returned"])
     response.headers.add('Access-Control-Allow-Origin', '*')
     return response
@@ -128,5 +128,9 @@ def show_home_page():
 
             except:
                 abort(404)
+        
+    response = jsonify(["this", "returned"])
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    response.status_code = 200
 
-    return render_template("home.html", form=form, phrase=phrase)
+    return response
