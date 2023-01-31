@@ -19,24 +19,33 @@ $(() => {
 
     $('form').on('submit', (e) => {
         e.preventDefault();
-        let data = [];
+        // let data = [];
 
-        // Puts the selected client/vms as index 0 for the ajax request
-        data.push($('#client_select option:selected').text())
+        // // Puts the selected client/vms as index 0 for the ajax request
+        // data.push($('#client_select option:selected').text())
 
-        // Pushes the file or files to be uploaded to the data array for the ajax request
-        const uploadfiles = $('#convert_files')[0].files;
-        for (let el of uploadfiles) {
-            data.push(el)
+        // // Pushes the file or files to be uploaded to the data array for the ajax request
+        // const uploadfiles = $('#convert_files')[0].files;
+        // for (let el of uploadfiles) {
+        //     data.push(el)
+        // }
+
+        let formData = new FormData();
+        let client = (document.querySelector('#client_select'))
+        let upload = document.querySelector('#convert_files');
+        for (let f of upload.files) {
+            formData.append(client.options[client.selectedIndex].text, f)
         }
 
         $.ajax({
             url: 'http://127.0.0.1:5000/',
             type: 'POST',
-            data: data,
+            data: formData,
             cache: false,
             contentType: false,
             processData: false,
+        }).done((res) => {
+            console.log(res)
         })
     });
 });
