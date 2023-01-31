@@ -55,8 +55,9 @@
                                     <label for="convert_files" class="upload=label text-white-50 mx-auto mt-2 mb-2">One or more Excel Files (.xls, .xlsx)</label>
                                     <input type="file" id="convert_files" class="form-control" name="Files" multiple="multiple" />
                                     
-                                    <button class="btn item-btn btn-primary mx-auto">Submit</button>
+                                    <button class="btn item-btn btn-primary mx-auto" id="submit-button">Submit</button>
                                 </form>
+                                <div id="errors"></div>
                                 <!-- <form method="POST" id="file-form" enctype="multipart/form-data">
                                     {{ form.hidden_tag() }}
                     
