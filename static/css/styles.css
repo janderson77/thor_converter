@@ -12095,3 +12095,8 @@ body {
 .footer {
 	padding: 5rem 0;
 }
+
+#loading {
+	font-size: 3rem;
+	padding-left: 39.5%;
+}

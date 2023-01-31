@@ -4,15 +4,13 @@ from flask import Flask, request, flash, abort, send_file, jsonify, Response
 from flask.templating import render_template
 from forms import FileForm
 import json
+from zipfile import ZipFile, ZipInfo, ZIP_DEFLATED
 from masterfile_api import convert_masterfile
 from helpers import getRandomPhrase
 from novatime_api import convertNT
-from zipfile import ZipFile, ZipInfo, ZIP_DEFLATED
-
 from nutraceutical import convert_nutra
 from pbm import convertPBM
 from maximus import convert_maximus
-
 
 app = Flask(__name__)
 
