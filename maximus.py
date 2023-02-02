@@ -35,7 +35,7 @@ def get_weekend_date(date_string, paycode):
             counter+=1
     
     if "-" in new_date_string:
-        new_date = datetime.datetime.strptime(new_date_string, '%m/%d/%y').strftime("%m-%d-%y")
+        new_date = datetime.datetime.strptime(new_date_string, '%m/%d/%y').strftime("%m/%d/%y")
     else:
         try:
             new_date = datetime.datetime.strptime(new_date_string, '%m/%d/%y').strftime("%m/%d/%y")
@@ -44,8 +44,8 @@ def get_weekend_date(date_string, paycode):
                 new_date_string = new_date_string[0:len(new_date_string)-1]
                 
                 new_date = datetime.datetime.strptime(new_date_string, '%m/%d/%y').strftime("%m/%d/%y")
-        # new_date = datetime.datetime.strptime(new_date_string, '%m/%d/%y').strftime("%m-%d-%y")
-    print(new_date)
+        print(date_string)
+        new_date = datetime.datetime.strptime(new_date_string, '%m/%d/%y').strftime("%m/%d/%y")
     new_date = datetime.datetime.strptime(new_date, '%m/%d/%y')
     weekend_date = new_date + datetime.timedelta(days=6-datetime.datetime.weekday(new_date))
     return weekend_date
