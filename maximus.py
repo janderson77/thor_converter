@@ -161,6 +161,3 @@ def convert_maximus(maximus_data, assignment_register):
     adjust_import = create_adjustment_import_with_req_number(data[0][1], "Maximus")
 
     return [gen_import, adjust_import]
-
-# Usefule for creating the import
-# we_date = datetime.datetime.strptime(datetime.datetime.fromisoformat(str(row[2])).strftime("%m/%d/%y"), '%m/%d/%y')
