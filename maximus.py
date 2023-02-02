@@ -19,21 +19,27 @@ class MaximusTC:
     weekend_date: datetime = None
 
 def get_weekend_date(date_string, paycode):
+    """
+    Finds the date information for the given entry.
+    Returns the appropriate week ending date (Always Sunday)
+    """
     starting = ""
-    if paycode == "sick":
-        starting = date_string.find("Pay") + 4
-    elif paycode == "covid-19":
+    if paycode == "sick" or paycode == "covid-19":
         starting = date_string.find("(")-9
 
     counter = 0
     new_date_string = ""
     while counter <= 9:
-        new_date_string = new_date_string + date_string[starting+counter]
         if date_string[starting+counter] == " ":
-            counter = 10
+            if counter < 1:
+                counter+=1
+                continue
+            else:
+                counter = 10
         else:
+            new_date_string = new_date_string + date_string[starting+counter]
             counter+=1
-    
+    new_date_string.strip()
     if "-" in new_date_string:
         new_date = datetime.datetime.strptime(new_date_string, '%m/%d/%y').strftime("%m/%d/%y")
     else:
@@ -131,6 +137,8 @@ def collect_maximux_data(maximus_data, assignment_register):
                 employee.paycode = "151"
             elif "monitor" in row[1].lower():
                 employee.paycode = "27"
+            elif "office" in row[1].lower():
+                employee.paycode = "46"
             else:
                 employee.paycode = "ERROR"
             employee.adjustment_pay = float(row[4])
