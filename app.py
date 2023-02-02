@@ -62,6 +62,8 @@ def show_home_page():
                 export = convertPBM(k)
                 files.append(export)
         elif form.client.data == "Maximus":
+            assignment_register = None
+            payroll_data = None
             for k in f:
                 if "assignment" in k.filename.lower():
                     assignment_register = k

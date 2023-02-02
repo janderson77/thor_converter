@@ -45,6 +45,7 @@ def get_weekend_date(date_string, paycode):
                 
                 new_date = datetime.datetime.strptime(new_date_string, '%m/%d/%y').strftime("%m/%d/%y")
         # new_date = datetime.datetime.strptime(new_date_string, '%m/%d/%y').strftime("%m-%d-%y")
+    print(new_date)
     new_date = datetime.datetime.strptime(new_date, '%m/%d/%y')
     weekend_date = new_date + datetime.timedelta(days=6-datetime.datetime.weekday(new_date))
     return weekend_date
@@ -58,7 +59,7 @@ def get_twid(employee, report):
         if not row[4]:
             break
         if employee.first[:len(employee.first)-1].lower() in row[4].lower() and employee.last[:len(employee.last)-1].lower() in row[4].lower():
-            return int(row[30])
+            return int(row[31])
 
 def collect_maximux_data(maximus_data, assignment_register):
     tcdata = []
