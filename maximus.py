@@ -19,23 +19,29 @@ class MaximusTC:
     weekend_date: datetime = None
 
 def get_weekend_date(date_string, paycode):
+    """
+    Finds the date information for the given entry.
+    Returns the appropriate week ending date (Always Sunday)
+    """
     starting = ""
-    if paycode == "sick":
-        starting = date_string.find("Pay") + 4
-    elif paycode == "covid-19":
+    if paycode == "sick" or paycode == "covid-19":
         starting = date_string.find("(")-9
 
     counter = 0
     new_date_string = ""
     while counter <= 9:
-        new_date_string = new_date_string + date_string[starting+counter]
         if date_string[starting+counter] == " ":
-            counter = 10
+            if counter < 1:
+                counter+=1
+                continue
+            else:
+                counter = 10
         else:
+            new_date_string = new_date_string + date_string[starting+counter]
             counter+=1
-    
+    new_date_string.strip()
     if "-" in new_date_string:
-        new_date = datetime.datetime.strptime(new_date_string, '%m/%d/%y').strftime("%m-%d-%y")
+        new_date = datetime.datetime.strptime(new_date_string, '%m/%d/%y').strftime("%m/%d/%y")
     else:
         try:
             new_date = datetime.datetime.strptime(new_date_string, '%m/%d/%y').strftime("%m/%d/%y")
@@ -44,7 +50,7 @@ def get_weekend_date(date_string, paycode):
                 new_date_string = new_date_string[0:len(new_date_string)-1]
                 
                 new_date = datetime.datetime.strptime(new_date_string, '%m/%d/%y').strftime("%m/%d/%y")
-        # new_date = datetime.datetime.strptime(new_date_string, '%m/%d/%y').strftime("%m-%d-%y")
+        new_date = datetime.datetime.strptime(new_date_string, '%m/%d/%y').strftime("%m/%d/%y")
     new_date = datetime.datetime.strptime(new_date, '%m/%d/%y')
     weekend_date = new_date + datetime.timedelta(days=6-datetime.datetime.weekday(new_date))
     return weekend_date
@@ -58,7 +64,7 @@ def get_twid(employee, report):
         if not row[4]:
             break
         if employee.first[:len(employee.first)-1].lower() in row[4].lower() and employee.last[:len(employee.last)-1].lower() in row[4].lower():
-            return int(row[30])
+            return int(row[31])
 
 def collect_maximux_data(maximus_data, assignment_register):
     tcdata = []
@@ -131,6 +137,8 @@ def collect_maximux_data(maximus_data, assignment_register):
                 employee.paycode = "151"
             elif "monitor" in row[1].lower():
                 employee.paycode = "27"
+            elif "office" in row[1].lower():
+                employee.paycode = "46"
             else:
                 employee.paycode = "ERROR"
             employee.adjustment_pay = float(row[4])
@@ -153,6 +161,3 @@ def convert_maximus(maximus_data, assignment_register):
     adjust_import = create_adjustment_import_with_req_number(data[0][1], "Maximus")
 
     return [gen_import, adjust_import]
-
-# Usefule for creating the import
-# we_date = datetime.datetime.strptime(datetime.datetime.fromisoformat(str(row[2])).strftime("%m/%d/%y"), '%m/%d/%y')
