@@ -79,23 +79,45 @@ $(() => {
         formData.append("client", client.options[client.selectedIndex].text)        
 
         let req = new XMLHttpRequest();
-        req.open('POST', url);
-        req.responseType = 'blob';
-        req.contentType = "application/zip"
-        req.onload = (e) => {
-            let contentDispo = e.currentTarget.getResponseHeader('Content-Disposition');
-            console.log(e.currentTarget.response)
-            let blob = new Blob([e.currentTarget.response], {type: 'application/zip'})
-            let fileName = contentDispo.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/)[1];
-            let a = document.createElement('a')
-            let url = window.URL.createObjectURL(blob)
-            a.setAttribute('download', fileName)
-            a.setAttribute("href", url)
-            document.body.append(a)
-            a.click()
-            a.remove()
-            window.URL.revokeObjectURL(url)
+        if (upload.files.length > 1){
+            req.open('POST', url);
+            req.responseType = 'blob';
+            req.contentType = "application/zip"
+            req.onload = (e) => {
+                let contentDispo = e.currentTarget.getResponseHeader('Content-Disposition');
+                let blob = new Blob([e.currentTarget.response], {type: 'application/zip'})
+                let fileName = contentDispo.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/)[1];
+                let a = document.createElement('a')
+                let url = window.URL.createObjectURL(blob)
+                a.setAttribute('download', fileName)
+                a.setAttribute("href", url)
+                document.body.append(a)
+                a.click()
+                a.remove()
+                window.URL.revokeObjectURL(url)
+            }
+            req.send(formData)
+        }else{
+            req.open('POST', url);
+            req.responseType = 'blob';
+            req.contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            req.onload = (e) => {
+                let contentDispo = e.currentTarget.getResponseHeader('Content-Disposition');
+                let blob = new Blob([e.currentTarget.response], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'})
+                let fileName = contentDispo.slice(22, contentDispo.length-1)
+                // let fileName = contentDispo.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/)[1];
+                let a = document.createElement('a')
+                let url = window.URL.createObjectURL(blob)
+                
+                a.setAttribute('download', fileName.trim())
+                a.setAttribute("href", url)
+                document.body.append(a)
+                a.click()
+                a.remove()
+                window.URL.revokeObjectURL(url)
+            }
+            req.send(formData)
         }
-        req.send(formData)
+        
     });
 });
