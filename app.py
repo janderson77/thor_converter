@@ -102,15 +102,16 @@ def process_data():
         memory_file.seek(0)
 
         try:
-            response = make_response(send_file(
-                memory_file, 
-                as_attachment=True, 
-                download_name="Imports.zip",
-                attachment_filename='Imports.zip'
-                ))
-            response.headers['mimetype'] ='application/zip'
-            response.content_type = "application/download"
-            return response
+            return send_file(memory_file, mimetype="application/zip", attachment_filename = "imports.zip", as_attachment=True)
+            # response = make_response(send_file(
+            #     memory_file, 
+            #     as_attachment=True, 
+            #     download_name="Imports.zip",
+            #     attachment_filename='Imports.zip'
+            #     ))
+            # response.headers['mimetype'] ='application/zip'
+            # response.content_type = "application/download"
+            # return response
 
         except:
             abort(404)
