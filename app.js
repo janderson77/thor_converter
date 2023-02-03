@@ -24,7 +24,6 @@ $(() => {
         tryCount : 0,
         retryLimit : 3,
         success : () => {
-            console.log(phraseIndex)
             $('#submit-button').text(phrases[phraseIndex]) 
             $('#overlay').fadeOut()
         },
@@ -90,6 +89,7 @@ $(() => {
             let a = document.createElement('a')
             let url = window.URL.createObjectURL(file)
             a.setAttribute('download', 'file')
+            console.log(e)
             a.href = url;
             a.download = fileName
             document.body.append(a)
@@ -99,7 +99,8 @@ $(() => {
         }
         req.send(formData)
 
-        console.log(req)
+        // console.log(req)
+
         // $.ajax({
         //     url: 'http://127.0.0.1:5000/',
         //     type: 'POST',
