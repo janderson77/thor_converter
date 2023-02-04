@@ -69,6 +69,23 @@ $(() => {
     $('form').on('submit', (e) => {
         e.preventDefault();
 
+        // let throgressContainer = $('#throgress')
+        let throgressContainer = document.getElementById("throgress")
+        let throgImg = document.createElement("img")
+        throgImg.setAttribute("src", "static/assets/img/throg.png")
+        throgImg.setAttribute("id", "throg")
+        throgImg.setAttribute("alt", "In Throgress")
+        throgImg.setAttribute("class", "rotate")
+        let inThrogress = document.createElement("p")
+        inThrogress.setAttribute("id", "loading")
+        inThrogress.setAttribute("class", "text-white-50 mx-auto mt-2 mb-3")
+        inThrogress.textContent = "In Throgress..."
+
+        
+        throgressContainer.append(throgImg)
+        throgressContainer.append(inThrogress)
+        console.log(throgressContainer)
+
         let formData = new FormData();
         let client = (document.getElementById('client_select'));
         let upload = document.querySelector('#convert_files');
@@ -95,6 +112,7 @@ $(() => {
                 a.click()
                 a.remove()
                 window.URL.revokeObjectURL(url)
+                throgressContainer.setAttribute("hidden", "true")
             }
             req.send(formData)
         }else{
@@ -105,7 +123,6 @@ $(() => {
                 let contentDispo = e.currentTarget.getResponseHeader('Content-Disposition');
                 let blob = new Blob([e.currentTarget.response], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'})
                 let fileName = contentDispo.slice(22, contentDispo.length-1)
-                // let fileName = contentDispo.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/)[1];
                 let a = document.createElement('a')
                 let url = window.URL.createObjectURL(blob)
                 
@@ -115,9 +132,10 @@ $(() => {
                 a.click()
                 a.remove()
                 window.URL.revokeObjectURL(url)
+                throgressContainer.setAttribute("hidden", "true")
+                
             }
             req.send(formData)
         }
-        
     });
 });
