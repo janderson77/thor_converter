@@ -4,14 +4,21 @@ const client_list = {
     "Novatime": "Novatime",
     "Nutraceutical": "Nutraceutical",
     "Maximus": "Maximus"
-}
+};
 
 const phrases = ["Crack the Sky", "Let Your Hammer Fly", "Call Down the Lightning",
-    "To Valhalla and Back", "Release Asgaard's Fury"]
+    "To Valhalla and Back", "Release Asgaard's Fury"];
 
-let phraseIndex = Math.floor(Math.random() * phrases.length)
+let phraseIndex = Math.floor(Math.random() * phrases.length);
 
 $(() => {
+    const handleInitialLoadError = () => {
+        $('#overlay').fadeOut();
+        $('#submit-button').prop("disabled", true);
+        $('#submit-button').text("Error: Disabled");
+        let errorHTML = `<p class="text-white-50 mx-auto mt-2 mb-2">Error: Please reload the page and try again.</p>`;
+        $('#errors').append(errorHTML);
+    }
     // Initial load function.
     // Checks if the backend is up and running.
     // Displays an error if it is not.
@@ -34,28 +41,16 @@ $(() => {
                     $.ajax(this);
                     return;
                 }
-                $('#overlay').fadeOut()
-                $('#submit-button').prop("disabled", true)
-                $('#submit-button').text("Error: Disabled")
-                let errorHTML = `<p class="text-white-50 mx-auto mt-2 mb-2">Error: Please reload the page and try again.</p>`
-                $('#errors').append(errorHTML)
+                handleInitialLoadError()
                 return;
             }
             if (xhr.status == 500) {
-                $('#overlay').fadeOut()
-                $('#submit-button').prop("disabled", true)
-                $('#submit-button').text("Error: Disabled")
-                let errorHTML = `<p class="text-white-50 mx-auto mt-2 mb-2">Error: Please reload the page and try again.</p>`
-                $('#errors').append(errorHTML)
+                handleInitialLoadError()
             } else {
-                $('#overlay').fadeOut()
-                $('#submit-button').prop("disabled", true)
-                $('#submit-button').text("Error: Disabled")
-                let errorHTML = `<p class="text-white-50 mx-auto mt-2 mb-2">Error: Please reload the page and try again.</p>`
-                $('#errors').append(errorHTML)
-            }
+                handleInitialLoadError()
+            };
         }
-    })
+    });
 
     // Sets the select to have the current supported clients/vms'
     $.each(client_list, function (key, value) {
@@ -68,76 +63,101 @@ $(() => {
     //Form submission handler
     $('form').on('submit', (e) => {
         e.preventDefault();
+        if ($('#errors').children().length > 0) {
+            $('#errors').children().remove();
+        };
 
-        // let throgressContainer = $('#throgress')
-        let throgressContainer = document.getElementById("throgress")
-        let throgImg = document.createElement("img")
-        throgImg.setAttribute("src", "static/assets/img/throg.png")
-        throgImg.setAttribute("id", "throg")
-        throgImg.setAttribute("alt", "In Throgress")
-        throgImg.setAttribute("class", "rotate")
-        let inThrogress = document.createElement("p")
-        inThrogress.setAttribute("id", "loading")
-        inThrogress.setAttribute("class", "text-white-50 mx-auto mt-2 mb-3")
-        inThrogress.textContent = "In Throgress..."
+        let throgressContainer = document.getElementById("throgress");
 
+        let throgImg = document.createElement("img");
+        throgImg.setAttribute("src", "static/assets/img/throg.png");
+        throgImg.setAttribute("id", "throg");
+        throgImg.setAttribute("alt", "In Throgress");
+        throgImg.setAttribute("class", "rotate");
 
-        throgressContainer.append(throgImg)
-        throgressContainer.append(inThrogress)
-        console.log(throgressContainer)
+        let inThrogress = document.createElement("p");
+        inThrogress.setAttribute("id", "loading");
+        inThrogress.setAttribute("class", "text-white-50 mx-auto mt-2 mb-3");
+        inThrogress.textContent = "In Throgress...";
+
+        throgressContainer.append(throgImg);
+        throgressContainer.append(inThrogress);
+
+        const removeThrog = () => {
+            throgImg.remove();
+            inThrogress.remove();
+        };
 
         let formData = new FormData();
         let client = (document.getElementById('client_select'));
         let upload = document.querySelector('#convert_files');
-        let url = 'http://127.0.0.1:5000/'
+        let url = 'http://127.0.0.1:5000/';
         for (let f of upload.files) {
-            formData.append("file", f)
-        }
-        formData.append("client", client.options[client.selectedIndex].text)
+            formData.append("file", f);
+        };
+        formData.append("client", client.options[client.selectedIndex].text);
 
         let req = new XMLHttpRequest();
-        if (upload.files.length > 1) {
+
+        // Error Handler
+        req.onreadystatechange = (ev) => {
+            if (req.readyState === 4) {
+                if (req.status !== 200) {
+                    req.abort();
+                    let errorHTML = `<p class="text-white-50 mx-auto mt-2 mb-2">Error: Please check your files.</p>`;
+                    $('#errors').append(errorHTML);
+                    removeThrog();
+                    return;
+                };
+            };
+        };
+
+        if (upload.files.length < 1) {
+            req.abort();
+            let errorHTML = `<p class="text-white-50 mx-auto mt-2 mb-2">Error: No file uploaded.</p>`;
+            $('#errors').append(errorHTML);
+            removeThrog();
+            return
+        } else if (upload.files.length > 1) {
             req.open('POST', url);
             req.responseType = 'blob';
-            req.contentType = "application/zip"
+            req.contentType = "application/zip";
             req.onload = (e) => {
                 let contentDispo = e.currentTarget.getResponseHeader('Content-Disposition');
-                let blob = new Blob([e.currentTarget.response], { type: 'application/zip' })
+                let blob = new Blob([e.currentTarget.response], { type: 'application/zip' });
                 let fileName = contentDispo.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/)[1];
-                let a = document.createElement('a')
-                let url = window.URL.createObjectURL(blob)
-                a.setAttribute('download', fileName)
-                a.setAttribute("href", url)
-                document.body.append(a)
-                a.click()
-                a.remove()
-                window.URL.revokeObjectURL(url)
-                throgImg.remove()
-                inThrogress.remove()
+                let a = document.createElement('a');
+                let url = window.URL.createObjectURL(blob);
+                a.setAttribute('download', fileName);
+                a.setAttribute("href", url);
+                document.body.append(a);
+                a.click();
+                a.remove();
+                window.URL.revokeObjectURL(url);
+                removeThrog();
             }
-            req.send(formData)
+            req.send(formData);
         } else {
             req.open('POST', url);
             req.responseType = 'blob';
-            req.contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            req.contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
             req.onload = (e) => {
                 let contentDispo = e.currentTarget.getResponseHeader('Content-Disposition');
-                let blob = new Blob([e.currentTarget.response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' })
-                let fileName = contentDispo.slice(22, contentDispo.length - 1)
-                let a = document.createElement('a')
-                let url = window.URL.createObjectURL(blob)
+                let blob = new Blob([e.currentTarget.response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+                let fileName = contentDispo.slice(22, contentDispo.length - 1);
+                let a = document.createElement('a');
+                let url = window.URL.createObjectURL(blob);
 
-                a.setAttribute('download', fileName.trim())
-                a.setAttribute("href", url)
-                document.body.append(a)
-                a.click()
-                a.remove()
-                window.URL.revokeObjectURL(url)
-                throgImg.remove()
-                inThrogress.remove()
+                a.setAttribute('download', fileName.trim());
+                a.setAttribute("href", url);
+                document.body.append(a);
+                a.click();
+                a.remove();
+                window.URL.revokeObjectURL(url);
+                removeThrog();
 
             }
-            req.send(formData)
-        }
+            req.send(formData);
+        };
     });
 });
