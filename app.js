@@ -16,7 +16,7 @@ $(() => {
         $('#overlay').fadeOut();
         $('#submit-button').prop("disabled", true);
         $('#submit-button').text("Error: Disabled");
-        let errorHTML = `<p class="text-white-50 mx-auto mt-2 mb-2">Error: Please reload the page and try again.</p>`;
+        let errorHTML = `<p class="text-white-50 mx-auto mt-2 mb-2">Error: Server offline.</p> <p class="text-white-50 mx-auto mt-2 mb-2">Please try again in 5 minutes</p>`;
         $('#errors').append(errorHTML);
     }
     // Initial load function.
@@ -86,6 +86,7 @@ $(() => {
         const removeThrog = () => {
             throgImg.remove();
             inThrogress.remove();
+            
         };
 
         let formData = new FormData();
@@ -103,6 +104,13 @@ $(() => {
         req.onreadystatechange = (ev) => {
             if (req.readyState === 4) {
                 if (req.status !== 200) {
+                    if (req.status === 0){
+                        req.abort();
+                        let errorHTML = `<p class="text-white-50 mx-auto mt-2 mb-2">Error: Server offline.</p> <p class="text-white-50 mx-auto mt-2 mb-2">Please try again in 5 minutes</p>`;
+                        $('#errors').append(errorHTML);
+                        removeThrog();
+                        return;
+                    }
                     req.abort();
                     let errorHTML = `<p class="text-white-50 mx-auto mt-2 mb-2">Error: Please check your files.</p>`;
                     $('#errors').append(errorHTML);
