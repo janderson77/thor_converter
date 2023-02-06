@@ -12,6 +12,8 @@ const phrases = ["Crack the Sky", "Let Your Hammer Fly", "Call Down the Lightnin
 let phraseIndex = Math.floor(Math.random() * phrases.length);
 
 $(() => {
+    // const appUrl = "https://thor-converter.onrender.com/"
+    const appUrl = "http://127.0.0.1:5000/"
     const handleInitialLoadError = () => {
         $('#overlay').fadeOut();
         $('#submit-button').prop("disabled", true);
@@ -23,7 +25,7 @@ $(() => {
     // Checks if the backend is up and running.
     // Displays an error if it is not.
     $.ajax({
-        url: 'http://127.0.0.1:5000/',
+        url: appUrl,
         type: 'GET',
         cache: false,
         contentType: false,
@@ -92,7 +94,7 @@ $(() => {
         let formData = new FormData();
         let client = (document.getElementById('client_select'));
         let upload = document.querySelector('#convert_files');
-        let url = 'http://127.0.0.1:5000/';
+        let url = appUrl
         for (let f of upload.files) {
             formData.append("file", f);
         };
@@ -135,13 +137,13 @@ $(() => {
                 let blob = new Blob([e.currentTarget.response], { type: 'application/zip' });
                 let fileName = contentDispo.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/)[1];
                 let a = document.createElement('a');
-                let url = window.URL.createObjectURL(blob);
+                let dlurl = window.URL.createObjectURL(blob);
                 a.setAttribute('download', fileName);
-                a.setAttribute("href", url);
+                a.setAttribute("href", dlurl);
                 document.body.append(a);
                 a.click();
                 a.remove();
-                window.URL.revokeObjectURL(url);
+                window.URL.revokeObjectURL(dlurl);
                 removeThrog();
             }
             req.send(formData);
@@ -154,14 +156,14 @@ $(() => {
                 let blob = new Blob([e.currentTarget.response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
                 let fileName = contentDispo.slice(22, contentDispo.length - 1);
                 let a = document.createElement('a');
-                let url = window.URL.createObjectURL(blob);
+                let dlurl = window.URL.createObjectURL(blob);
 
                 a.setAttribute('download', fileName.trim());
-                a.setAttribute("href", url);
+                a.setAttribute("href", dlurl);
                 document.body.append(a);
                 a.click();
                 a.remove();
-                window.URL.revokeObjectURL(url);
+                window.URL.revokeObjectURL(dlurl);
                 removeThrog();
 
             }
