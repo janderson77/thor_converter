@@ -27,7 +27,6 @@ def allowed_file(filename):
 
 @app.route('/', methods=["POST"])
 def process_data():
-    print(request.files)
     client = request.form.get('client')
     f = request.files.getlist("file")
     files = []
