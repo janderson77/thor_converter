@@ -3,7 +3,6 @@ import time
 from flask import Flask, request, flash, abort, send_file, jsonify, make_response
 from flask.templating import render_template
 from flask_cors import CORS
-from forms import FileForm
 import json
 from zipfile import ZipFile, ZipInfo, ZIP_DEFLATED
 from masterfile_api import convert_masterfile
@@ -121,14 +120,6 @@ def process_data():
     
 @app.route('/', methods=["GET"])
 def show_home_page():
-    c = open('clients.json')
-    data = json.load(c)
-    d = []
-    for i in data['Clients']:
-        d.append(i['name'])
-    form = FileForm()
-    form.client.choices = d
-
     response = jsonify(["message", "API Loaded"])
     response.headers.add('Access-Control-Allow-Origin', '*')
     response.status_code = 200
