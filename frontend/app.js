@@ -12,8 +12,8 @@ const phrases = ["Crack the Sky", "Let Your Hammer Fly", "Call Down the Lightnin
 let phraseIndex = Math.floor(Math.random() * phrases.length);
 
 $(() => {
-    // const appUrl = "https://thor-converter.onrender.com/"
-    const appUrl = "http://127.0.0.1:5000/"
+    const appUrl = "https://thor-converter-be.onrender.com/"
+    // const appUrl = "http://127.0.0.1:5000/"
     const handleInitialLoadError = () => {
         $('#overlay').fadeOut();
         $('#submit-button').prop("disabled", true);
