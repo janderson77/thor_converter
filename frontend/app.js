@@ -41,8 +41,6 @@ $(() => {
                 this.tryCount++;
                 if (this.tryCount <= this.retryLimit) {
                     setTimeout(() => {$.ajax(this)},1000)
-                    $.ajax(this);
-                    return;
                 }
                 handleInitialLoadError()
                 return;
