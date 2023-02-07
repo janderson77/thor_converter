@@ -12095,3 +12095,36 @@ body {
 .footer {
 	padding: 5rem 0;
 }
+
+#loading {
+	font-size: 3rem;
+	padding-left: 39.5%;
+}
+
+#throgress {
+	font-size: 3rem;
+	/* padding-left: 39.5%; */
+}
+
+#throgress p {
+	padding-left: 30%;
+}
+
+.rotate {
+	-webkit-animation:spin 2s linear infinite alternate;
+	-moz-animation:spin 2s linear infinite alternate;
+	animation:spin 2s linear infinite alternate;
+}
+
+@-moz-keyframes spin { 
+    100% { -moz-transform: rotate(25deg); } 
+}
+@-webkit-keyframes spin { 
+    100% { -webkit-transform: rotate(25deg); } 
+}
+@keyframes spin { 
+    100% { 
+        -webkit-transform: rotate(25deg); 
+        transform:rotate(25deg); 
+    } 
+}
