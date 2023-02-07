@@ -114,6 +114,10 @@ def process_data():
         memory_file.seek(0)
 
         try:
+            res = make_response(
+                send_file(memory_file, mimetype="application/zip", attachment_filename = "imports.zip", as_attachment=True)
+            )
+            res.headers.add('Access-Control-Allow-Origin', 'https://thor-converter-fe.onrender.com/')
             return send_file(memory_file, mimetype="application/zip", attachment_filename = "imports.zip", as_attachment=True)
         except:
             abort(404)
