@@ -113,7 +113,7 @@ $(() => {
                         return;
                     }
                     req.abort();
-                    let errorHTML = `<p class="text-white-50 mx-auto mt-2 mb-2">Error: Please check your files.</p>`;
+                    let errorHTML = `<p class="text-white-50 mx-auto mt-2 mb-2">Error: Please check your files.</p><p class="text-white-50 mx-auto mt-2 mb-2">Try opening them, saving as is, and try again.</p>`;
                     $('#errors').append(errorHTML);
                     removeThrog();
                     return;
