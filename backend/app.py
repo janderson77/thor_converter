@@ -1,7 +1,7 @@
 from io import BytesIO
 import time
 from flask import Flask, request, abort, send_file, jsonify, make_response
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 import json
 from zipfile import ZipFile, ZipInfo, ZIP_DEFLATED
 from masterfile_api import convert_masterfile
@@ -24,6 +24,7 @@ def allowed_file(filename):
         filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @app.route('/', methods=["POST"])
+@cross_origin(origins='https://thor-converter-fe.onrender.com/')
 def process_data():
     client = request.form.get('client')
     f = request.files.getlist("file")
@@ -76,7 +77,8 @@ def process_data():
                     as_attachment=True,
                     download_name=f'{files[0][1]}.xls',
                     attachment_filename=f'{files[0][1]}.xls',
-                    mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                    mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                    
                 )
             except:
                 response = make_response(jsonify({
@@ -84,6 +86,7 @@ def process_data():
                 }),
                 500,)
                 response.headers["Content-Type"] = "application/json"
+                response.headers.add('Access-Control-Allow-Origin', 'https://thor-converter-fe.onrender.com/')
                 return response
         else:
             try:
@@ -99,6 +102,7 @@ def process_data():
                 }),
                 500,)
                 response.headers["Content-Type"] = "application/json"
+                response.headers.add('Access-Control-Allow-Origin', 'https://thor-converter-fe.onrender.com/')
                 return response
 
     else:
