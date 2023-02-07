@@ -24,7 +24,6 @@ def allowed_file(filename):
         filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @app.route('/', methods=["POST"])
-@cross_origin(origins='*')
 def process_data():
     client = request.form.get('client')
     f = request.files.getlist("file")
@@ -67,40 +66,50 @@ def process_data():
             }),
             500,)
         response.headers["Content-Type"] = "application/json"
+        response.headers['Access-Control-Allow-Origin'] = '*'
         return response
 
     elif len(files) == 1:
         if client == "PBM":
             try:
-                return send_file(
+                response = make_response(
+                    send_file(
                     files[0][0],
                     as_attachment=True,
                     download_name=f'{files[0][1]}.xls',
                     attachment_filename=f'{files[0][1]}.xls',
                     mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-                    
+                    )
                 )
+                response.headers['Access-Control-Allow-Origin'] = '*'
+                return response
             except:
                 response = make_response(jsonify({
                     "message": "File not processed. Please see Administrator"
                 }),
                 500,)
                 response.headers["Content-Type"] = "application/json"
+                response.headers['Access-Control-Allow-Origin'] = '*'
+                
                 return response
         else:
             try:
-                return send_file(
+                response = make_response(
+                    send_file(
                     files[0][0],
                     as_attachment=True,
                     download_name=f'{files[0][1]}.xlsx',
                     mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-                )
+                ))
+                response.headers['Access-Control-Allow-Origin'] = '*'
+                return response
             except:
                 response = make_response(jsonify({
                     "message": "File not processed. Please see Administrator"
                 }),
                 500,)
                 response.headers["Content-Type"] = "application/json"
+                response.headers['Access-Control-Allow-Origin'] = '*'
                 return response
 
     else:
@@ -114,11 +123,11 @@ def process_data():
         memory_file.seek(0)
 
         try:
-            res = make_response(
+            response = make_response(
                 send_file(memory_file, mimetype="application/zip", attachment_filename = "imports.zip", as_attachment=True)
             )
-            res.headers.add('Access-Control-Allow-Origin', '*')
-            return res
+            response.headers['Access-Control-Allow-Origin'] = '*'
+            return response
         except:
             abort(404)
     
