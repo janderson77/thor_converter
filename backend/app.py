@@ -24,7 +24,7 @@ def allowed_file(filename):
         filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @app.route('/', methods=["POST"])
-@cross_origin(origins='*')
+@cross_origin(origins='https://thor-converter-fe.onrender.com/')
 def process_data():
     client = request.form.get('client')
     f = request.files.getlist("file")
@@ -124,7 +124,7 @@ def process_data():
 @app.route('/', methods=["GET"])
 def show_home_page():
     response = jsonify(["message", "API Loaded"])
-    response.headers.add('Access-Control-Allow-Origin', '*')
+    response.headers.add('Access-Control-Allow-Origin', 'https://thor-converter-fe.onrender.com/')
     response.status_code = 200
 
     return response
