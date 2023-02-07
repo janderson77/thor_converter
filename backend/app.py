@@ -1,7 +1,6 @@
 from io import BytesIO
 import time
-from flask import Flask, request, flash, abort, send_file, jsonify, make_response
-from flask.templating import render_template
+from flask import Flask, request, abort, send_file, jsonify, make_response
 from flask_cors import CORS
 import json
 from zipfile import ZipFile, ZipInfo, ZIP_DEFLATED
@@ -121,7 +120,7 @@ def process_data():
 @app.route('/', methods=["GET"])
 def show_home_page():
     response = jsonify(["message", "API Loaded"])
-    response.headers.add('Access-Control-Allow-Origin', '*')
+    response.headers.add('Access-Control-Allow-Origin', 'https://thor-converter-fe.onrender.com/')
     response.status_code = 200
 
     return response
