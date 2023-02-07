@@ -24,7 +24,7 @@ def allowed_file(filename):
         filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @app.route('/', methods=["POST"])
-@cross_origin(origins='https://thor-converter-fe.onrender.com/')
+@cross_origin(origins='*')
 def process_data():
     client = request.form.get('client')
     f = request.files.getlist("file")
@@ -117,7 +117,7 @@ def process_data():
             res = make_response(
                 send_file(memory_file, mimetype="application/zip", attachment_filename = "imports.zip", as_attachment=True)
             )
-            res.headers.add('Access-Control-Allow-Origin', 'https://thor-converter-fe.onrender.com/')
+            res.headers.add('Access-Control-Allow-Origin', '*')
             return res
         except:
             abort(404)
@@ -126,7 +126,7 @@ def process_data():
 @app.route('/', methods=["GET"])
 def show_home_page():
     response = jsonify(["message", "API Loaded"])
-    response.headers.add('Access-Control-Allow-Origin', 'https://thor-converter-fe.onrender.com/')
+    response.headers.add('Access-Control-Allow-Origin', '*')
     response.status_code = 200
 
     return response
