@@ -67,6 +67,7 @@ def process_data():
             500,)
         response.headers["Content-Type"] = "application/json"
         response.headers['Access-Control-Allow-Origin'] = '*'
+        response.headers["Access-Control-Expose-Headers"] = "Content-Disposition"
         return response
 
     elif len(files) == 1:
@@ -82,6 +83,7 @@ def process_data():
                     )
                 )
                 response.headers['Access-Control-Allow-Origin'] = '*'
+                response.headers["Access-Control-Expose-Headers"] = "Content-Disposition"
                 return response
             except:
                 response = make_response(jsonify({
@@ -90,6 +92,7 @@ def process_data():
                 500,)
                 response.headers["Content-Type"] = "application/json"
                 response.headers['Access-Control-Allow-Origin'] = '*'
+                response.headers["Access-Control-Expose-Headers"] = "Content-Disposition"
                 
                 return response
         else:
@@ -102,6 +105,7 @@ def process_data():
                     mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
                 ))
                 response.headers['Access-Control-Allow-Origin'] = '*'
+                response.headers["Access-Control-Expose-Headers"] = "Content-Disposition"
                 return response
             except:
                 response = make_response(jsonify({
@@ -110,6 +114,7 @@ def process_data():
                 500,)
                 response.headers["Content-Type"] = "application/json"
                 response.headers['Access-Control-Allow-Origin'] = '*'
+                response.headers["Access-Control-Expose-Headers"] = "Content-Disposition"
                 return response
 
     else:
@@ -127,6 +132,7 @@ def process_data():
                 send_file(memory_file, mimetype="application/zip", attachment_filename = "imports.zip", as_attachment=True)
             )
             response.headers['Access-Control-Allow-Origin'] = '*'
+            response.headers["Access-Control-Expose-Headers"] = "Content-Disposition"
             return response
         except:
             abort(404)
