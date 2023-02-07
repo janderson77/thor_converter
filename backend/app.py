@@ -102,6 +102,7 @@ def process_data():
                     files[0][0],
                     as_attachment=True,
                     download_name=f'{files[0][1]}.xlsx',
+                    attachment_filename=f'{files[0][1]}.xlsx',
                     mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
                 ))
                 response.headers['Access-Control-Allow-Origin'] = '*'
@@ -129,19 +130,25 @@ def process_data():
 
         try:
             response = make_response(
-                send_file(memory_file, mimetype="application/zip", attachment_filename = "imports.zip", as_attachment=True)
+                send_file(memory_file, mimetype="application/zip", attachment_filename = "imports.zip", download_name="imports.zip", as_attachment=True)
             )
             response.headers['Access-Control-Allow-Origin'] = '*'
             response.headers["Access-Control-Expose-Headers"] = "content-disposition"
             return response
         except:
-            abort(404)
+            response = make_response(jsonify({
+                    "message": "File not processed. Please see Administrator"
+                }),
+                500,)
+            response.headers["Content-Type"] = "application/json"
+            response.headers['Access-Control-Allow-Origin'] = '*'
+            return response
     
     
 @app.route('/', methods=["GET"])
 def show_home_page():
     response = jsonify(["message", "API Loaded"])
-    response.headers.add('Access-Control-Allow-Origin', '*')
+    response.headers['Access-Control-Allow-Origin'] = '*'
     response.status_code = 200
 
     return response
