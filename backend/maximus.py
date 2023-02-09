@@ -41,8 +41,7 @@ def get_weekend_date(date_string, paycode):
         else:
             new_date_string = new_date_string + date_string[starting+counter]
             counter+=1
-    print(date_string)
-    print(new_date_string)
+
     new_date_string.strip()
     if "-" in new_date_string:
         new_date = datetime.datetime.strptime(new_date_string, '%m/%d/%y').strftime("%m/%d/%y")
