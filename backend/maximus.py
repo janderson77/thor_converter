@@ -26,6 +26,8 @@ def get_weekend_date(date_string, paycode):
     starting = ""
     if paycode == "sick" or paycode == "covid-19":
         starting = date_string.find("(")-9
+        if date_string[starting] == "y" or date_string[starting] == "-":
+            starting = starting+2
 
     counter = 0
     new_date_string = ""
@@ -39,6 +41,8 @@ def get_weekend_date(date_string, paycode):
         else:
             new_date_string = new_date_string + date_string[starting+counter]
             counter+=1
+    print(date_string)
+    print(new_date_string)
     new_date_string.strip()
     if "-" in new_date_string:
         new_date = datetime.datetime.strptime(new_date_string, '%m/%d/%y').strftime("%m/%d/%y")
