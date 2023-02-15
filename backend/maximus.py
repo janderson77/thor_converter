@@ -28,6 +28,8 @@ def get_weekend_date(date_string, paycode):
         starting = date_string.find("(")-9
         if date_string[starting] == "y" or date_string[starting] == "-":
             starting = starting+2
+        elif date_string[starting] == "":
+            starting = starting+1
 
     counter = 0
     new_date_string = ""
@@ -43,20 +45,20 @@ def get_weekend_date(date_string, paycode):
             counter+=1
 
     new_date_string.strip()
-    if "-" in new_date_string:
+    try:
         new_date = datetime.datetime.strptime(new_date_string, '%m/%d/%y').strftime("%m/%d/%y")
-    else:
-        try:
+        new_date = datetime.datetime.strptime(new_date, '%m/%d/%y')
+        weekend_date = new_date + datetime.timedelta(days=6-datetime.datetime.weekday(new_date))
+        return weekend_date
+    except ValueError as v:
+        print(v)
+        if len(v.args) > 0 and v.args[0].startswith('unconverted data remains:'):
+            new_date_string = new_date_string[0:len(new_date_string)-1] 
             new_date = datetime.datetime.strptime(new_date_string, '%m/%d/%y').strftime("%m/%d/%y")
-        except ValueError as v:
-            if len(v.args) > 0 and v.args[0].startswith('unconverted data remains:'):
-                new_date_string = new_date_string[0:len(new_date_string)-1]
-                
-                new_date = datetime.datetime.strptime(new_date_string, '%m/%d/%y').strftime("%m/%d/%y")
-        new_date = datetime.datetime.strptime(new_date_string, '%m/%d/%y').strftime("%m/%d/%y")
-    new_date = datetime.datetime.strptime(new_date, '%m/%d/%y')
-    weekend_date = new_date + datetime.timedelta(days=6-datetime.datetime.weekday(new_date))
-    return weekend_date
+        else:
+            raise ValueError(f"Date format is not what is expected for {date_string}.")
+    except TypeError:
+        raise TypeError(f"The program did not find the correct location of the date for {date_string}.")
 
 def get_twid(employee, report):
     '''
