@@ -118,8 +118,9 @@ $(() => {
                 let fileName = contentDispo.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/)[1];
                 let a = document.createElement('a');
                 let dlurl = window.URL.createObjectURL(blob);
-                fileName = fileName.replace('"', '')
-                fileName = fileName.replace('"', '')
+                fileName = fileName.replace('"', '');
+                fileName = fileName.replace('"', '');
+                fileName = fileName.trim();
                 a.setAttribute('download', fileName);
                 a.setAttribute("href", dlurl);
                 document.body.append(a);
@@ -138,15 +139,17 @@ $(() => {
                 method: 'POST',
                 url: appUrl,
                 data: formData,
-                headers: { "Content-Type": "multipart/form-data" }
+                headers: { "Content-Type": "multipart/form-data" },
+                responseType: 'arraybuffer',
             }).then((e) => {
                 let contentDispo = e.headers['content-disposition']
                 let blob = new Blob([e.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
                 let fileName = contentDispo.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/)[1];
                 let a = document.createElement('a');
                 let dlurl = window.URL.createObjectURL(blob);
-                fileName = fileName.replace('"', '')
-                fileName = fileName.replace('"', '')
+                fileName = fileName.replace('"', '');
+                fileName = fileName.replace('"', '');
+                fileName = fileName.trim();
                 a.setAttribute('download', fileName);
                 a.setAttribute("href", dlurl);
                 document.body.append(a);
