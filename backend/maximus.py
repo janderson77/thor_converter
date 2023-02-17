@@ -56,9 +56,11 @@ def get_weekend_date(date_string, paycode):
             new_date_string = new_date_string[0:len(new_date_string)-1] 
             new_date = datetime.datetime.strptime(new_date_string, '%m/%d/%y').strftime("%m/%d/%y")
         else:
-            raise ValueError(f"Date format is not what is expected for {date_string}.")
+            weekend_date_error = {"error": "ValueError", "message": f"Date format is not what is expected for {date_string}."}
+            return weekend_date_error
     except TypeError:
-        raise TypeError(f"The program did not find the correct location of the date for {date_string}.")
+        weekend_date_error = {"error": "TypeError", "message": f"The program did not find the correct location of the date for {date_string}."}
+        return weekend_date_error
 
 def get_twid(employee, report):
     '''
@@ -98,7 +100,11 @@ def collect_maximux_data(maximus_data, assignment_register):
 
             # Move up in scope when all paycodes are working
             # It takes a paycode as an argument
-            employee.weekend_date = get_weekend_date(row[1], employee.paycode)
+            employee_weekend_date = get_weekend_date(row[1], employee.paycode)
+            if type(employee_weekend_date) == dict:
+                return employee_weekend_date
+            else:
+                employee.weekend_date = employee_weekend_date
             starting = row[1].find("(")
             sick_hours = ""
             for index, value in enumerate(row[1], start = starting+1):
@@ -160,7 +166,11 @@ def convert_maximus(maximus_data, assignment_register):
 
     data = []
 
-    data.append(collect_maximux_data(maximus_ws, areg_ws))
+    to_append = collect_maximux_data(maximus_ws, areg_ws)
+    if type(to_append) == dict:
+        return to_append
+    else:
+        data.append(to_append)
     
     gen_import = create_generic_import_with_req_number(data[0], "Maximus")
     adjust_import = create_adjustment_import_with_req_number(data[0][1], "Maximus")

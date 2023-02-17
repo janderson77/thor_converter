@@ -12117,3 +12117,7 @@ body {
         transform:rotate(25deg); 
     } 
 }
+
+#errors {
+	max-width: 350px;
+}

@@ -99,44 +99,27 @@ $(() => {
         };
         formData.append("client", client.options[client.selectedIndex].text);
 
-        let req = new XMLHttpRequest();
-
-        // Error Handler
-        req.onreadystatechange = (ev) => {
-            if (req.readyState === 4) {
-                if (req.status !== 200) {
-                    if (req.status === 0){
-                        req.abort();
-                        let errorHTML = `<p class="text-white-50 mx-auto mt-2 mb-2">Error: Server offline.</p> <p class="text-white-50 mx-auto mt-2 mb-2">Please try again in 5 minutes</p>`;
-                        $('#errors').append(errorHTML);
-                        removeThrog();
-                        return;
-                    }
-                    req.abort();
-                    let errorHTML = `<p class="text-white-50 mx-auto mt-2 mb-2">Error: Please check your files.</p><p class="text-white-50 mx-auto mt-2 mb-2">Try opening them, saving as is, and try again.</p>`;
-                    $('#errors').append(errorHTML);
-                    removeThrog();
-                    return;
-                };
-            };
-        };
-
         if (upload.files.length < 1) {
-            req.abort();
             let errorHTML = `<p class="text-white-50 mx-auto mt-2 mb-2">Error: No file uploaded.</p>`;
             $('#errors').append(errorHTML);
             removeThrog();
             return
         } else if (upload.files.length > 1) {
-            req.open('POST', url);
-            req.responseType = 'blob';
-            req.contentType = "application/zip";
-            req.onload = (e) => {
-                let contentDispo = e.currentTarget.getResponseHeader('Content-Disposition');
-                let blob = new Blob([e.currentTarget.response], { type: 'application/zip' });
+            axios({
+                url: url,
+                data: formData,
+                headers: { "Content-Type": "multipart/form-data" },
+                responseType: 'arraybuffer',
+                method: 'POST',
+            }).then((e) => {
+                console.log(e)
+                let contentDispo = e.headers['content-disposition']
+                let blob = new Blob([e.data], { type: 'application/zip' });
                 let fileName = contentDispo.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/)[1];
                 let a = document.createElement('a');
                 let dlurl = window.URL.createObjectURL(blob);
+                fileName = fileName.replace('"', '')
+                fileName = fileName.replace('"', '')
                 a.setAttribute('download', fileName);
                 a.setAttribute("href", dlurl);
                 document.body.append(a);
@@ -144,29 +127,39 @@ $(() => {
                 a.remove();
                 window.URL.revokeObjectURL(dlurl);
                 removeThrog();
-            }
-            req.send(formData);
+            }).catch((e) => {
+                let errorHTML = `<p class="text-white-50 mx-auto mt-2 mb-2">${e.response.data['message']}</p>`;
+                $('#errors').append(errorHTML);
+                removeThrog();
+                return;
+            })
         } else {
-            req.open('POST', url);
-            req.responseType = 'blob';
-            req.contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-            req.onload = (e) => {
-                let contentDispo = e.currentTarget.getResponseHeader('Content-Disposition');
-                let blob = new Blob([e.currentTarget.response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-                let fileName = contentDispo.slice(22, contentDispo.length - 1);
+            axios({
+                method: 'POST',
+                url: appUrl,
+                data: formData,
+                headers: { "Content-Type": "multipart/form-data" }
+            }).then((e) => {
+                let contentDispo = e.headers['content-disposition']
+                let blob = new Blob([e.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+                let fileName = contentDispo.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/)[1];
                 let a = document.createElement('a');
                 let dlurl = window.URL.createObjectURL(blob);
-
-                a.setAttribute('download', fileName.trim());
+                fileName = fileName.replace('"', '')
+                fileName = fileName.replace('"', '')
+                a.setAttribute('download', fileName);
                 a.setAttribute("href", dlurl);
                 document.body.append(a);
                 a.click();
                 a.remove();
                 window.URL.revokeObjectURL(dlurl);
                 removeThrog();
-
-            }
-            req.send(formData);
+            }).catch((e) => {
+                let errorHTML = `<p class="text-white-50 mx-auto mt-2 mb-2">${e.response.data['message']}</p>`;
+                $('#errors').append(errorHTML);
+                removeThrog();
+                return;
+            })
         };
     });
 });

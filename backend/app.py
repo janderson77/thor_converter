@@ -57,14 +57,24 @@ def process_data():
             else:
                 payroll_data = k
         export = convert_maximus(payroll_data, assignment_register)
-        for e in export:
-            files.append(e)
+        if type(export) == dict:
+            response = make_response(jsonify({
+                "message": export["message"]
+            }),
+                400)
+            response.headers["Content-Type"] = "application/json"
+            response.headers['Access-Control-Allow-Origin'] = '*'
+            response.headers["Access-Control-Expose-Headers"] = "content-disposition"
+            return response
+        else:
+            for e in export:
+                files.append(e)
 
     if len(files) == 0:
         response = make_response(jsonify({
                 "message": "No File Uploaded"
             }),
-            500,)
+            400,)
         response.headers["Content-Type"] = "application/json"
         response.headers['Access-Control-Allow-Origin'] = '*'
         response.headers["Access-Control-Expose-Headers"] = "content-disposition"
@@ -89,7 +99,7 @@ def process_data():
                 response = make_response(jsonify({
                     "message": "File not processed. Please see Administrator"
                 }),
-                500,)
+                400,)
                 response.headers["Content-Type"] = "application/json"
                 response.headers['Access-Control-Allow-Origin'] = '*'
                 response.headers["Access-Control-Expose-Headers"] = "content-disposition"
@@ -112,7 +122,7 @@ def process_data():
                 response = make_response(jsonify({
                     "message": "File not processed. Please see Administrator"
                 }),
-                500,)
+                400,)
                 response.headers["Content-Type"] = "application/json"
                 response.headers['Access-Control-Allow-Origin'] = '*'
                 response.headers["Access-Control-Expose-Headers"] = "content-disposition"
@@ -139,7 +149,7 @@ def process_data():
             response = make_response(jsonify({
                     "message": "File not processed. Please see Administrator"
                 }),
-                500,)
+                400,)
             response.headers["Content-Type"] = "application/json"
             response.headers['Access-Control-Allow-Origin'] = '*'
             return response
