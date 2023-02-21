@@ -1,12 +1,20 @@
 from openpyxl import load_workbook
 from helpers import Employee, create_adjustment_import, create_generic_import, collect_sheet_names
 
-def collect_hours(row, number):
+def collect_hours(row, number, collecting=None):
     """
     Collects hours data from the appropriate cells
     Checks if there is data in the cell. If there is data, checks if it is already a float or not. If not, converts to float before returning.
     """
-    if type(row[number]) == None:
+    if collecting == "bonus":
+        if row[number] == None and row[number+1] != None:
+            if type(row[number+1]) == int:
+                return float(row[number+1])
+            else:
+                return row[number+1]
+        else:
+            return None
+    elif type(row[number]) == None:
         return None
     if type(row[number]) == str and len(row[number]) < 1:
         return None
@@ -37,37 +45,23 @@ def collect_employee_data(sheet, columns, s_name="None"):
         if row[0] != None and type(row[0]) != str:
             tc = Employee(id=row[0])
             reg1 = collect_hours(row, columns['reg1'])
-            reg2 = collect_hours(row, columns['reg2'])
             ot1 = collect_hours(row, columns['ot1'])
-            ot2 = collect_hours(row, columns['ot2'])
             salary = collect_hours(row, columns['salary'])
-            bonus = collect_hours(row, columns['bonus'])
-            if columns['bonus2'] != 99:
-                bonus2 = collect_hours(row, columns['bonus2'])
-            else:
-                bonus2 = 0
+            bonus = collect_hours(row, columns['bonus'], "bonus")
             commission = collect_hours(row, columns['commission'])
             expenses = collect_hours(row, columns['expenses'])
             vacation = collect_hours(row, columns['vacation'])
 
             # Adds regular hours to time card, or sets the value to None
-            if reg1 != None and reg2 != None:
-                tc.reg = round(reg1 + reg2, 2)
-            elif reg1 != None and reg2 == None:
+            if reg1 != None:
                 tc.reg = round(reg1, 2)
-            elif reg1 == None and reg2 != None:
-                tc.reg = round(reg2, 2)
             else:
                 tc.reg = None
 
             # Adds overtime hours to time card, or sets the value to None
-            if ot1 != None and ot2 != None:
-                tc.ot1 = round(ot1 + ot2, 2)
-            elif ot1 != None and ot2 == None:
+            if ot1 != None:
                 tc.ot1 = round(ot1, 2)
-            elif ot1 == None and ot2 != None:
-                tc.ot1 = round(ot2, 2)
-            elif ot1 == None and ot2 == None and tc.reg != None:
+            elif ot1 == None and tc.reg != None:
                 tc.ot1 = 0
             else:
                 tc.ot1 = None
@@ -76,13 +70,9 @@ def collect_employee_data(sheet, columns, s_name="None"):
             if salary != None:
                 tc.salary = round(salary, 2)
 
-            if bonus != None and bonus2 != None: 
-                tc.bonus = round(bonus + bonus2, 2)
-            elif bonus != None and bonus2 == None:
-                tc.bonus = round(bonus,2)
-            elif bonus == None and bonus2 != None:
-                tc.bonus = round(bonus2, 2)
-            elif bonus == None and bonus2 == None and tc.bonus != None:
+            if bonus != None: 
+                tc.bonus = round(bonus, 2)
+            elif bonus == None and tc.bonus != None:
                 tc.bonus = None
             else:
                 tc.bonus = None
@@ -118,14 +108,11 @@ def find_data_column(sheet, row):
     """Finds the column numbers for each required column"""
     columns = {
         "reg1": 6,
-        "reg2": 6,
         "ot1": 7,
-        "ot2": 7,
         "salary": None,
         "bonus": None,
-        "bonus2": 99,
         "commission": None,
-        "expenses": 23,
+        "expenses": 16,
         "vacation": None
 
     }
@@ -138,13 +125,11 @@ def find_data_column(sheet, row):
     for i, v in enumerate(data_row[:24]):
         if v == None or type(v) == None:
             continue
-        if "Reg Hrs 1 Week" in v or "reg hrs week 1" in v.lower() or "reg hrs week1" in v.lower():
+        if "Reg Hrs" in v or "reg hrs" in v.lower():
             columns['reg1'] = i
-            columns['reg2'] = (i+1)
 
-        if "OT Hrs Week 1" in v or "OT Hrs week1" in v or "OT Hrs week 1" in v:
+        if "OT Hrs" in v or "ot hrs" in v.lower():
             columns['ot1'] = i
-            columns['ot2'] = i+1
 
         if "salary" in v.lower():
             if "total" in v.lower():
@@ -154,11 +139,6 @@ def find_data_column(sheet, row):
         if "bonus pay" in v.lower():
             if "rate" in v.lower():
                 continue
-            if "week 2" in v.lower() and columns['bonus2'] != 99:
-                continue
-            if "week 1" in v.lower():
-                columns['bonus'] = i
-                columns['bonus2'] = i+1
             else:
                 columns['bonus'] = i
         if "Commission Pay" in v:
