@@ -40,7 +40,6 @@ $(() => {
                     initialLoad(tryCount++)
                 }, 1000);
             }else{
-                clearTimeout();
                 handleInitialLoadError();
             };
         });
