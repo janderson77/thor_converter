@@ -18,40 +18,34 @@ $(() => {
         $('#overlay').fadeOut();
         $('#submit-button').prop("disabled", true);
         $('#submit-button').text("Error: Disabled");
-        let errorHTML = `<p class="text-white-50 mx-auto mt-2 mb-2">Error: Server offline.</p> <p class="text-white-50 mx-auto mt-2 mb-2">Please try again in 5 minutes</p>`;
+        let errorHTML = `<p class="text-white-50 mx-auto mt-2 mb-2">Error: Server offline.</p> <p class="text-white-50 mx-auto mt-2 mb-2">Please try again in 2-3 minutes</p>`;
         $('#errors').append(errorHTML);
     }
+
     // Initial load function.
     // Checks if the backend is up and running.
     // Displays an error if it is not.
-    $.ajax({
-        url: appUrl,
-        type: 'GET',
-        cache: false,
-        contentType: false,
-        processData: false,
-        tryCount: 0,
-        retryLimit: 3,
-        success: () => {
-            $('#submit-button').text(phrases[phraseIndex])
-            $('#overlay').fadeOut()
-        },
-        error: (xhr, textStatus, errorThrown) => {
-            if (textStatus == 'timeout') {
-                this.tryCount++;
-                if (this.tryCount <= this.retryLimit) {
-                    setTimeout(() => {$.ajax(this)},1000)
-                }
-                handleInitialLoadError()
-                return;
-            }
-            if (xhr.status == 500) {
-                handleInitialLoadError()
-            } else {
-                handleInitialLoadError()
+    const initialLoad = (tryCount=0) => {
+        let retryLimit = 3;
+        axios({
+            url: appUrl,
+            method: 'GET'
+        }).then((e) => {
+            $('#submit-button').text(phrases[phraseIndex]);
+            $('#overlay').fadeOut();
+        }).catch((e) => {
+            tryCount++;
+            if(tryCount <= retryLimit){
+                setTimeout(() => {
+                    initialLoad(tryCount++)
+                }, 1000);
+            }else{
+                clearTimeout();
+                handleInitialLoadError();
             };
-        }
-    });
+        });
+    };
+    initialLoad();
 
     // Sets the select to have the current supported clients/vms'
     $.each(client_list, function (key, value) {
