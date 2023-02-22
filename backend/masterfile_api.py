@@ -1,19 +1,24 @@
 from openpyxl import load_workbook
-from helpers import Employee, create_adjustment_import, create_generic_import, collect_sheet_names
+from helpers import Employee, create_generic_import, collect_sheet_names
 
 def collect_hours(row, number, collecting=None):
     """
     Collects hours data from the appropriate cells
     Checks if there is data in the cell. If there is data, checks if it is already a float or not. If not, converts to float before returning.
     """
-    if collecting == "bonus":
+    if collecting == "bonus" or collecting == "commission":
         if row[number] == None and row[number+1] != None:
-            if type(row[number+1]) == int:
+            if type(row[number+1]) != float:
                 return float(row[number+1])
             else:
                 return row[number+1]
-        else:
+        elif row[number]== None and row[number+1] == None:
             return None
+        else:
+            if type(row[number+1]) != float:
+                return float(row[number])
+            else:
+                return row[number]
     elif type(row[number]) == None:
         return None
     if type(row[number]) == str and len(row[number]) < 1:
@@ -48,7 +53,7 @@ def collect_employee_data(sheet, columns, s_name="None"):
             ot1 = collect_hours(row, columns['ot1'])
             salary = collect_hours(row, columns['salary'])
             bonus = collect_hours(row, columns['bonus'], "bonus")
-            commission = collect_hours(row, columns['commission'])
+            commission = collect_hours(row, columns['commission'], "commission")
             expenses = collect_hours(row, columns['expenses'])
             vacation = collect_hours(row, columns['vacation'])
 
