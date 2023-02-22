@@ -1,11 +1,9 @@
 from io import BytesIO
 import time
-from flask import Flask, request, abort, send_file, jsonify, make_response
-from flask_cors import CORS, cross_origin
-import json
+from flask import Flask, request, send_file, jsonify, make_response
+from flask_cors import CORS
 from zipfile import ZipFile, ZipInfo, ZIP_DEFLATED
 from masterfile_api import convert_masterfile
-from helpers import getRandomPhrase
 from novatime_api import convertNT
 from nutraceutical import convert_nutra
 from pbm import convertPBM
