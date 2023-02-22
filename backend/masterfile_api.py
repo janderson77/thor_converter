@@ -15,7 +15,7 @@ def collect_hours(row, number, collecting=None):
         elif row[number]== None and row[number+1] == None:
             return None
         else:
-            if type(row[number+1]) != float:
+            if type(row[number]) != float:
                 return float(row[number])
             else:
                 return row[number]
