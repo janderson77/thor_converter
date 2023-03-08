@@ -156,7 +156,13 @@ $(() => {
                 window.URL.revokeObjectURL(dlurl);
                 removeThrog();
             }).catch((e) => {
-                let errorHTML = `<p class="text-white-50 mx-auto mt-2 mb-2">${e.response.data['message']}</p>`;
+                let errorHTML;
+                if(e.response.data['message'] === undefined){
+                    errorHTML = `<p class="text-white-50 mx-auto mt-2 mb-2">Error: Try opening the spreadsheet,(s)</p> <p class="text-white-50 mx-auto mt-2 mb-2">save and close, and try again.</p>`;
+                }else{
+                    errorHTML = `<p class="text-white-50 mx-auto mt-2 mb-2">${e.response.data['message']}</p>`
+                }
+                ;
                 $('#errors').append(errorHTML);
                 removeThrog();
                 return;
