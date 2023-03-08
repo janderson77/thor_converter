@@ -124,7 +124,7 @@ $(() => {
             }).catch((e) => {
                 let errorHTML;
                 if(e.response.data['message'] === undefined){
-                    errorHTML = `<p class="text-white-50 mx-auto mt-2 mb-2">Unkown Error</p><p class="text-white-50 mx-auto mt-2 mb-2">Try opening the spreadsheet,(s)</p> <p class="text-white-50 mx-auto mt-2 mb-2">save and close, and try again.</p><p class="text-white-50 mx-auto mt-2 mb-2">Or see administrator.</p>`;
+                    errorHTML = `<p class="text-white-50 mx-auto mt-2 mb-2">Unkown Error</p><p class="text-white-50 mx-auto mt-2 mb-2">Try opening the spreadsheet(s),</p> <p class="text-white-50 mx-auto mt-2 mb-2">save and close, and try again.</p><p class="text-white-50 mx-auto mt-2 mb-2">Or see administrator.</p>`;
                 }else{
                     errorHTML = `<p class="text-white-50 mx-auto mt-2 mb-2">${e.response.data['message']}</p>`;
                 }
@@ -158,7 +158,7 @@ $(() => {
             }).catch((e) => {
                 let errorHTML;
                 if(e.response.data['message'] === undefined){
-                    errorHTML = `<p class="text-white-50 mx-auto mt-2 mb-2">Error: Try opening the spreadsheet,(s)</p> <p class="text-white-50 mx-auto mt-2 mb-2">save and close, and try again.</p>`;
+                    errorHTML = `<p class="text-white-50 mx-auto mt-2 mb-2">Error: Try opening the spreadsheet(s),</p> <p class="text-white-50 mx-auto mt-2 mb-2">save and close, and try again.</p>`;
                 }else{
                     errorHTML = `<p class="text-white-50 mx-auto mt-2 mb-2">${e.response.data['message']}</p>`
                 }
