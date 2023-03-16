@@ -71,7 +71,7 @@ def get_twid(employee, report):
         if not row[4]:
             break
         if employee.first[:len(employee.first)-1].lower() in row[4].lower() and employee.last[:len(employee.last)-1].lower() in row[4].lower():
-            return int(row[31])
+            return int(row[33])
 
 def collect_maximux_data(maximus_data, assignment_register):
     tcdata = []
