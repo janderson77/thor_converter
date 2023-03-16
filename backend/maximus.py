@@ -26,7 +26,7 @@ def get_weekend_date(date_string, paycode):
     starting = ""
     if paycode == "sick" or paycode == "covid-19":
         starting = date_string.find("(")-9
-        if date_string[starting] == "y" or date_string[starting] == "-":
+        if date_string[starting] == "y" or date_string[starting] == "-" or date_string[starting] == "e":
             starting = starting+2
         elif date_string[starting] == "":
             starting = starting+1
@@ -43,6 +43,14 @@ def get_weekend_date(date_string, paycode):
         else:
             new_date_string = new_date_string + date_string[starting+counter]
             counter+=1
+    
+    if len(new_date_string)> 6:
+            new_new_date_string = ""
+            for i, v in enumerate(new_date_string):
+                if i == 4 or i == 5:
+                    continue
+                new_new_date_string = new_new_date_string + v
+                new_date_string = new_new_date_string
 
     new_date_string.strip()
     try:
@@ -51,7 +59,6 @@ def get_weekend_date(date_string, paycode):
         weekend_date = new_date + datetime.timedelta(days=6-datetime.datetime.weekday(new_date))
         return weekend_date
     except ValueError as v:
-        print(v)
         if len(v.args) > 0 and v.args[0].startswith('unconverted data remains:'):
             new_date_string = new_date_string[0:len(new_date_string)-1] 
             new_date = datetime.datetime.strptime(new_date_string, '%m/%d/%y').strftime("%m/%d/%y")
@@ -60,6 +67,9 @@ def get_weekend_date(date_string, paycode):
             return weekend_date_error
     except TypeError:
         weekend_date_error = {"error": "TypeError", "message": f"The program did not find the correct location of the date for {date_string}."}
+        return weekend_date_error
+    except:
+        weekend_date_error = {"error": "Error", "message": f"Error is {date_string}"}
         return weekend_date_error
 
 def get_twid(employee, report):
@@ -71,7 +81,7 @@ def get_twid(employee, report):
         if not row[4]:
             break
         if employee.first[:len(employee.first)-1].lower() in row[4].lower() and employee.last[:len(employee.last)-1].lower() in row[4].lower():
-            return int(row[33])
+            return int(row[32])
 
 def collect_maximux_data(maximus_data, assignment_register):
     tcdata = []
