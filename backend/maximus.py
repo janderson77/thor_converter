@@ -44,7 +44,7 @@ def get_weekend_date(date_string, paycode):
             new_date_string = new_date_string + date_string[starting+counter]
             counter+=1
     
-    if len(new_date_string)> 6:
+    if len(new_date_string)> 8:
             new_new_date_string = ""
             for i, v in enumerate(new_date_string):
                 if i == 4 or i == 5:
@@ -77,6 +77,7 @@ def get_twid(employee, report):
     Gets tempworks employee ID's from an assignment register report and returns them.
     If the function returns None, then they are not on the report.
     '''
+
     for row in report.iter_rows(min_row=6, max_row=9999, values_only=True):
         if not row[4]:
             break
