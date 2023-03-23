@@ -122,11 +122,12 @@ $(() => {
                 window.URL.revokeObjectURL(dlurl);
                 removeThrog();
             }).catch((e) => {
-                let errorHTML;
-                if(e.response.data['message'] === undefined){
+                const errorText = JSON.parse(new TextDecoder().decode(e.response.data))
+                console.log(errorText.message)
+                if(errorText.message === "undefined"){
                     errorHTML = `<p class="text-white-50 mx-auto mt-2 mb-2">Unkown Error</p><p class="text-white-50 mx-auto mt-2 mb-2">Try opening the spreadsheet(s),</p> <p class="text-white-50 mx-auto mt-2 mb-2">save and close, and try again.</p><p class="text-white-50 mx-auto mt-2 mb-2">Or see administrator.</p>`;
                 }else{
-                    errorHTML = `<p class="text-white-50 mx-auto mt-2 mb-2">${e.response.data['message']}</p>`;
+                    errorHTML = `<p class="text-white-50 mx-auto mt-2 mb-2">${errorText.message}</p>`;
                 }
                 $('#errors').append(errorHTML);
                 removeThrog();
@@ -137,7 +138,7 @@ $(() => {
                 method: 'POST',
                 url: appUrl,
                 data: formData,
-                headers: { "Content-Type": "multipart/form-data" },
+                headers: { "Content-Type": "multipart/form-data", 'Accept': 'application/json' },
                 responseType: 'arraybuffer',
             }).then((e) => {
                 let contentDispo = e.headers['content-disposition']
@@ -157,12 +158,12 @@ $(() => {
                 removeThrog();
             }).catch((e) => {
                 let errorHTML;
-                if(e.response.data['message'] === undefined){
-                    errorHTML = `<p class="text-white-50 mx-auto mt-2 mb-2">Error: Try opening the spreadsheet(s),</p> <p class="text-white-50 mx-auto mt-2 mb-2">save and close, and try again.</p>`;
+                const errorText = JSON.parse(new TextDecoder().decode(e.response.data))
+                if(errorText.message === "undefined"){
+                    errorHTML = `<p class="text-white-50 mx-auto mt-2 mb-2">Unkown Error</p><p class="text-white-50 mx-auto mt-2 mb-2">Try opening the spreadsheet(s),</p> <p class="text-white-50 mx-auto mt-2 mb-2">save and close, and try again.</p><p class="text-white-50 mx-auto mt-2 mb-2">Or see administrator.</p>`;
                 }else{
-                    errorHTML = `<p class="text-white-50 mx-auto mt-2 mb-2">${e.response.data['message']}</p>`
-                }
-                ;
+                    errorHTML = `<p class="text-white-50 mx-auto mt-2 mb-2">${errorText.message}</p>`;
+                };
                 $('#errors').append(errorHTML);
                 removeThrog();
                 return;
