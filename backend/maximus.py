@@ -44,13 +44,19 @@ def get_weekend_date(date_string, paycode):
             new_date_string = new_date_string + date_string[starting+counter]
             counter+=1
     
-    if len(new_date_string)> 8:
+    if len(new_date_string) >= 8:
             new_new_date_string = ""
+            slashcount = 0
             for i, v in enumerate(new_date_string):
-                if i == 4 or i == 5:
-                    continue
+                if v == "/":
+                    slashcount+=1
+                if slashcount == 2 and v != "/":
+                    if v == "2" and new_date_string[i+1] == "0":
+                        continue
+                    elif v == "0":
+                        continue
                 new_new_date_string = new_new_date_string + v
-                new_date_string = new_new_date_string
+            new_date_string = new_new_date_string
 
     new_date_string.strip()
     try:
