@@ -105,7 +105,6 @@ $(() => {
                 responseType: 'arraybuffer',
                 method: 'POST',
             }).then((e) => {
-                console.log(e)
                 let contentDispo = e.headers['content-disposition']
                 let blob = new Blob([e.data], { type: 'application/zip' });
                 let fileName = contentDispo.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/)[1];
@@ -123,7 +122,6 @@ $(() => {
                 removeThrog();
             }).catch((e) => {
                 const errorText = JSON.parse(new TextDecoder().decode(e.response.data))
-                console.log(errorText.message)
                 if(errorText.message === "undefined"){
                     errorHTML = `<p class="text-white-50 mx-auto mt-2 mb-2">Unkown Error</p><p class="text-white-50 mx-auto mt-2 mb-2">Try opening the spreadsheet(s),</p> <p class="text-white-50 mx-auto mt-2 mb-2">save and close, and try again.</p><p class="text-white-50 mx-auto mt-2 mb-2">Or see administrator.</p>`;
                 }else{
