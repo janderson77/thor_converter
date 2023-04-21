@@ -386,7 +386,11 @@ def create_vms_reconciliation_sheet():
         new_sheet[f'{i}2'].alignment = center_aligned_text
 
     col_names = ["SJ Invoice Number", "Invoice Type", "Invoice Number + Invoice Type", "Corrected Worker / WE Date", "BT Invoice ID (VMS)", "Consolidated Invoice ID (VMS)", "VMS Work Order ID", "SJ Customer ID", "SJ Customer Name", "Corrected Name", "Weekending", "Due Date (from Brand Aging)", "Today's Date", "Days Past Due", "Sum of Min of PAM Bill Rate", "Sum of Sum of Corrected PAM Time Billed", "SJ Total Avg Rate", "VMS Total Avg Rate", "Total Avg Rate Variance", "SJ ST Rate", "VMS ST Rate", "ST Rate Variance", "SJ OT Rate", "VMS OT Rate", "OT Rate Variance", "SJ DT Rate", "VMS DT Rate", "DT Rate Variance", "SJ ST HRS", "VMS ST HRS", "ST HRS DELTA", "SJ OT HRS", "VMS OT HRS", "OT HRS DELTA", "SJ DT HRS", "VMS DT HRS", "DT HRS DELTA", "SJ Hours Total", "VMS Hours Total", "Total Hours Variance", "SJ ST Revenue", "VMS ST Revenue", "Total Reg Variance", "SJ OT Revenue", "VMS OT Revenue", "Total OT Rev Variance", "SJ DT Revenue", "VMS DT Revenue", "SJ Expenses", "VMS Expenses", "Total ExpensesVariance", "SJ Total Amount", "VMS Total Amount / GG PAID", "Total Amount Variance", "Write Off Risk", "Overpayment Risk", "Sum of Total Fee From GP Timesheet Report", "Sum of Total Fee Tax Amount From GP Timesheet Report", "Amount Paid", "Variance", "Sum of Total Fee Tax Amount - CER Aging AMT (If = 0 Then Issue is Tax Discrepancy, Tax Department)", "GG EFT Number", "Paid Date", "Issue 1", "Resolution Owner", "Issue 2", "true customer"]
+    sheet_row = 2
 
+    # Sets row 2 as the column names and writes the appropriate value to them.
+    for i,v in enumerate(col_names):
+        new_sheet.cell(row=sheet_row, column=i).value = v
 
 def getRandomPhrase():
     phraseIndex = randrange(5)
