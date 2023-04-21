@@ -33,3 +33,5 @@ for row in ws.iter_rows(min_row=ws.min_row, max_row=ws.max_row, values_only=True
 xlsxfields = xlsxrows[0]
 # removes all but the data below the fields
 xlsxrows = xlsxrows[1:]
+
+ws.close
