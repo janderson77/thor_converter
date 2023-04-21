@@ -26,7 +26,7 @@ def reconcile_vms(csvfilename, xlsxfilename):
     # extracts fields and appends them to csvfields list
     for item in csvrows[3]:
         csvfields.append(item)
-    # removes all but the data below the fields
+    # removes all but the data below the column headers
     csvrows = csvrows[4:]
 
     # appends all rows to the xlsxrows list
@@ -36,7 +36,7 @@ def reconcile_vms(csvfilename, xlsxfilename):
     # extracts fields and appends them to xlsxfields list
     for item in xlsxrows[0]:
         xlsxfields.append(item)
-    # removes all but the data below the fields
+    # removes all but the data below the column headers
     xlsxrows = xlsxrows[1:]
 
 reconcile_vms(csvfilename, xlsxfilename)
