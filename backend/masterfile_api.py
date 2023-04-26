@@ -47,6 +47,8 @@ def collect_employee_data(sheet, columns, s_name="None"):
     """Iterates over the sheet data, creating a new Employee class instance, filling it with data and appending it onto the data list"""
     data = []
     for row in sheet.iter_rows(min_row=sheet.min_row, max_row=sheet.max_row, values_only=True):
+        if row[0] == 946481:
+            continue
         if row[0] != None and type(row[0]) != str and row[0] <= 1:
             continue
         if row[0] != None and type(row[0]) != str:
