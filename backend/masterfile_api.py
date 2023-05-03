@@ -90,7 +90,7 @@ def collect_employee_data(sheet, columns, s_name="None"):
                 tc.commission = round(commission, 2)
             if expenses != None:
                 if s_name == "DSD Managers":
-                    tc.expenses = round(expenses, 2) - 9
+                    tc.expenses = round(expenses, 2)
                     tc.adjustment = 18
                 else:
                     tc.expenses = round(expenses, 2)
