@@ -185,7 +185,7 @@ def convert_masterfile(input):
 
     if len(special_data) > 0:
         for d in special_data:
-            gen_res = create_generic_import(d, 1.165, "Papa Pita")
+            gen_res = create_generic_import(d, 1.162, "Papa Pita")
             # adj_res = create_adjustment_import(d, 48, "Papa Pita")
             to_export.append(gen_res)
             # to_export.append(adj_res)
