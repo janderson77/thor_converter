@@ -180,7 +180,7 @@ def convert_masterfile(input):
             data.append([s, collect_employee_data(wb[s], columns, s)])
 
     for d in data:
-        res = create_generic_import(d, 1.165, "Papa Pita")
+        res = create_generic_import(d, 1.162, "Papa Pita")
         to_export.append(res)
 
     if len(special_data) > 0:
