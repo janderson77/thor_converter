@@ -7,6 +7,12 @@ def collect_hours(row, number, collecting=None):
     Checks if there is data in the cell. If there is data, checks if it is already a float or not. If not, converts to float before returning.
     """
     if collecting == "bonus" or collecting == "commission":
+        if number == None:
+            return None
+        if type(row[number]) == None and type(row[number+1]) == None:
+            return None
+        if row[number] == None and row[number+1] == None:
+            return None
         if row[number] == None and row[number+1] != None:
             if type(row[number+1]) != float:
                 return float(row[number+1])
