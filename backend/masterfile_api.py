@@ -9,22 +9,32 @@ def collect_hours(row, number, collecting=None):
     if collecting == "bonus" or collecting == "commission":
         if number == None:
             return None
-        if type(row[number]) == None and type(row[number+1]) == None:
-            return None
-        if row[number] == None and row[number+1] == None:
-            return None
-        if row[number] == None and row[number+1] != None:
-            if type(row[number+1]) != float:
-                return float(row[number+1])
-            else:
-                return row[number+1]
-        elif row[number]== None and row[number+1] == None:
-            return None
+        paydata = number
+
+        if row[paydata] == None:
+            if row[paydata+1] == None:
+                return None
+            paydata = paydata+1
+
+        if type(row[paydata]) != float and type(row[paydata] != None):
+            return float(row[paydata])
         else:
-            if type(row[number]) != float:
-                return float(row[number])
-            else:
-                return row[number]
+            return row[paydata]
+        # if row[number] == None and row[number-1] != None and row[number+1] != None:
+        #     return None
+        # elif row[number] == None and row[number+1] != None and row[number-1] == None:
+        #     if type(row[number+1]) != float:
+        #         return float(row[number+1])
+        #     else:
+        #         return row[number+1]
+        # elif row[number]== None and row[number+1] == None:
+        #     return None
+        # else:
+        #     if type(row[number]) != float and type(row[number] != None):
+        #         print(row,number, row[number])
+        #         return float(row[number])
+        #     else:
+        #         return row[number]
     elif type(row[number]) == None:
         return None
     if type(row[number]) == str and len(row[number]) < 1:
@@ -151,13 +161,18 @@ def find_data_column(sheet, row):
                 continue
             elif "pay" in v.lower():
                 columns['salary'] = i
-        if "bonus pay" in v.lower():
+        if "bonus" in v.lower():
+            if columns['bonus'] != None:
+                continue
             if "rate" in v.lower():
                 continue
             else:
                 columns['bonus'] = i
-        if "Commission Pay" in v:
-            columns['commission'] = i
+        if "commission" in v.lower():
+            if columns["commission"] != None:
+                continue
+            else:
+                columns['commission'] = i
         if "Expenses-" in v or "Expenses -" in v:
             columns['expenses'] = i
         if "Vacation Pay" in v:
