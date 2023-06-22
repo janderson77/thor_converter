@@ -6,11 +6,10 @@ def collect_hours(row, number, collecting=None):
     Collects hours data from the appropriate cells
     Checks if there is data in the cell. If there is data, checks if it is already a float or not. If not, converts to float before returning.
     """
-    if collecting == "bonus" or collecting == "commission":
-        if number == None:
+    if number == None:
             return None
-        paydata = number
-
+    paydata = number
+    if collecting == "bonus" or collecting == "commission" or collecting == "miles":
         if row[paydata] == None:
             if row[paydata+1] == None:
                 return None
@@ -20,43 +19,28 @@ def collect_hours(row, number, collecting=None):
             return float(row[paydata])
         else:
             return row[paydata]
-        # if row[number] == None and row[number-1] != None and row[number+1] != None:
-        #     return None
-        # elif row[number] == None and row[number+1] != None and row[number-1] == None:
-        #     if type(row[number+1]) != float:
-        #         return float(row[number+1])
-        #     else:
-        #         return row[number+1]
-        # elif row[number]== None and row[number+1] == None:
-        #     return None
-        # else:
-        #     if type(row[number]) != float and type(row[number] != None):
-        #         print(row,number, row[number])
-        #         return float(row[number])
-        #     else:
-        #         return row[number]
-    elif type(row[number]) == None:
+    elif type(row[paydata]) == None:
         return None
-    if type(row[number]) == str and len(row[number]) < 1:
+    if type(row[paydata]) == str and len(row[paydata]) < 1:
         return None
-    elif type(row[number]) == float:
-        return row[number]
-    elif type(row[number]) == str and len(row[number]) > 0:
-        if type(row[number]) == str:
+    elif type(row[paydata]) == float:
+        return row[paydata]
+    elif type(row[paydata]) == str and len(row[paydata]) > 0:
+        if type(row[paydata]) == str:
             return None
-        if row[number] == "#N/A":
+        if row[paydata] == "#N/A":
             return None
-        if "=" in row[number]:
+        if "=" in row[paydata]:
             return None
-        elif "." in row[number]:
-            return float(row[number])
+        elif "." in row[paydata]:
+            return float(row[paydata])
         else:
-            h = int(row[number])
+            h = int(row[paydata])
             return float(h)
-    elif type(row[number]) == int:
-        return float(row[number])
+    elif type(row[paydata]) == int:
+        return float(row[paydata])
     else:
-        return row[number]
+        return row[paydata]
 
 
 def collect_employee_data(sheet, columns, s_name="None"):
@@ -76,6 +60,7 @@ def collect_employee_data(sheet, columns, s_name="None"):
             commission = collect_hours(row, columns['commission'], "commission")
             expenses = collect_hours(row, columns['expenses'])
             vacation = collect_hours(row, columns['vacation'])
+            miles = collect_hours(row, columns['miles'], "miles")
 
             # Adds regular hours to time card, or sets the value to None
             if reg1 != None:
@@ -107,11 +92,13 @@ def collect_employee_data(sheet, columns, s_name="None"):
             if expenses != None:
                 if s_name == "DSD Managers":
                     tc.expenses = round(expenses, 2)
-                    tc.adjustment = 18
+                    tc.adjustment = 9
                 else:
                     tc.expenses = round(expenses, 2)
             if vacation != None:
                 tc.vacation = round(vacation,2)
+            if miles != None:
+                tc.miles = round(miles,2)
 
             data.append(tc)
     return data
@@ -138,7 +125,8 @@ def find_data_column(sheet, row):
         "bonus": None,
         "commission": None,
         "expenses": 16,
-        "vacation": None
+        "vacation": None,
+        "miles": None
 
     }
 
@@ -177,6 +165,8 @@ def find_data_column(sheet, row):
             columns['expenses'] = i
         if "Vacation Pay" in v:
             columns['vacation'] = i
+        if "miles" in v.lower() or "Milles" in v:
+            columns["miles"] = i
 
     return columns
 
