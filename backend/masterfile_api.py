@@ -11,7 +11,9 @@ def collect_hours(row, number, collecting=None):
     paydata = number
     if collecting == "bonus" or collecting == "commission" or collecting == "miles":
         if row[paydata] == None:
-            if row[paydata+1] == None:
+            if collecting == "miles":
+                return None
+            elif row[paydata+1] == None:
                 return None
             paydata = paydata+1
 
@@ -165,7 +167,7 @@ def find_data_column(sheet, row):
             columns['expenses'] = i
         if "Vacation Pay" in v:
             columns['vacation'] = i
-        if "miles" in v.lower() or "Milles" in v:
+        if "miles" in v.lower() or "Milles" in v or "milles" in v.lower():
             columns["miles"] = i
 
     return columns
