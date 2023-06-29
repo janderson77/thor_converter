@@ -1,5 +1,6 @@
 from openpyxl import load_workbook
 from helpers import Employee, create_generic_import, collect_sheet_names
+import re
 
 def collect_hours(row, number, collecting=None):
     """
@@ -18,6 +19,8 @@ def collect_hours(row, number, collecting=None):
             paydata = paydata+1
 
         if type(row[paydata]) != float and type(row[paydata] != None):
+            if type(row[paydata]) == str:
+                return None
             return float(row[paydata])
         else:
             return row[paydata]
@@ -29,6 +32,8 @@ def collect_hours(row, number, collecting=None):
         return row[paydata]
     elif type(row[paydata]) == str and len(row[paydata]) > 0:
         if type(row[paydata]) == str:
+            return None
+        if re.search('[a-zA-Z]', row[paydata]):
             return None
         if row[paydata] == "#N/A":
             return None
@@ -49,12 +54,19 @@ def collect_employee_data(sheet, columns, s_name="None"):
     """Iterates over the sheet data, creating a new Employee class instance, filling it with data and appending it onto the data list"""
     data = []
     for row in sheet.iter_rows(min_row=sheet.min_row, max_row=sheet.max_row, values_only=True):
-        if row[0] == 946481:
-            continue
+        tc = None
         if row[0] != None and type(row[0]) != str and row[0] <= 1:
             continue
+
+        if row[0] != None and type(row[0]) == str and len(row[0]) > 2:
+            if re.search('[a-zA-z]', row[0]):
+                continue
+            tc = Employee(int(row[0]))
+            
         if row[0] != None and type(row[0]) != str:
             tc = Employee(id=row[0])
+        
+        if tc:
             reg1 = collect_hours(row, columns['reg1'])
             ot1 = collect_hours(row, columns['ot1'])
             salary = collect_hours(row, columns['salary'])
@@ -63,7 +75,6 @@ def collect_employee_data(sheet, columns, s_name="None"):
             expenses = collect_hours(row, columns['expenses'])
             vacation = collect_hours(row, columns['vacation'])
             miles = collect_hours(row, columns['miles'], "miles")
-
             # Adds regular hours to time card, or sets the value to None
             if reg1 != None:
                 tc.reg = round(reg1, 2)
