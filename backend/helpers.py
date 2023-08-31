@@ -231,6 +231,7 @@ def create_generic_import(data, markup, customer_name=None):
             new_sheet.cell(row=sheet_row, column=2).value = e.id
             new_sheet.cell(row=sheet_row, column=3).value = customer_name
             new_sheet.cell(row=sheet_row, column=9).value=str('vac1')
+            new_sheet.cell(row=sheet_row, column=10).value = 1
             new_sheet.cell(row=sheet_row, column=11).value = e.vacation
             new_sheet.cell(row=sheet_row, column=12).value = e.vacation*markup
             sheet_row += 1
